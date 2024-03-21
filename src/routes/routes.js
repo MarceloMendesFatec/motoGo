@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
 import SplashScreen from "../screens/splashScreen";
 import LoginScreen from "../screens/loginScreen";
+import SignUpScreen from "../screens/signUpScreen";
 import { NativeBaseProvider } from "native-base";
 
 const Stack = createNativeStackNavigator();
@@ -23,6 +24,12 @@ const AppNavigator = ({navigation}) => {
             name="Login"
             component={LoginScreen}
             options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SignUp"
+            component={SignUpScreen}
+            options={{ headerShown: true, title: "Cadastro"}}
+            
           />
         </Stack.Navigator>
       </NavigationContainer>

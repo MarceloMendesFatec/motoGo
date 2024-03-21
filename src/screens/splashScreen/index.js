@@ -16,7 +16,7 @@ const SplashScreen = ({ navigation }) => {//todas as telas recebem o parâmetro 
   return (
       //todos os componentes do NativeBase são renderizados dentro desta tag
       <NativeBaseProvider>  
-        <Box flex={1} bg="#fff" alignItems="center" justifyContent="center">
+        <Box flex={1} bg="#f2f2f2" alignItems="center" justifyContent="center">
           <Animatable.View animation="fadeIn" duration={4000}>
             <Heading color="primary.500" size='3xl'> motoGo</Heading>
             <Box mt={4} justifyContent="center" alignItems="center" >
