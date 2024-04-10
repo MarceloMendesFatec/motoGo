@@ -17,7 +17,10 @@ const LoginScreen = ({ navigation }) => {
     const signUp = () => {
         navigation.navigate("SignUp");
     };
-    
+    const forgotPassword = () => {
+        navigation.navigate("Forgot");
+    };
+
     return (
         <NativeBaseProvider>
             {/* box central */}
@@ -38,7 +41,7 @@ const LoginScreen = ({ navigation }) => {
                         <Input placeholder="Senha" type="password" />
                     </Box>
                     <Box mt={4}>
-                        <Link alignSelf="flex-end" _text={{ color: "info.700" }} onPress={() => { }}>
+                        <Link alignSelf="flex-end" _text={{ color: "info.700" }} onPress={forgotPassword}>
                             Esqueceu a senha?
                         </Link>
                     </Box>

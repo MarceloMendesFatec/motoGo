@@ -6,6 +6,7 @@ import React from "react";
 import SplashScreen from "../screens/splashScreen";
 import LoginScreen from "../screens/loginScreen";
 import SignUpScreen from "../screens/signUpScreen";
+import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import { NativeBaseProvider } from "native-base";
 
 const Stack = createNativeStackNavigator();
@@ -15,6 +16,7 @@ const AppNavigator = ({navigation}) => {
     <NativeBaseProvider>
       <NavigationContainer>
         <Stack.Navigator>
+         
           <Stack.Screen
             name="Splash"
             component={SplashScreen}
@@ -30,6 +32,11 @@ const AppNavigator = ({navigation}) => {
             component={SignUpScreen}
             options={{ headerShown: true, title: "Cadastro"}}
             
+          />
+         <Stack.Screen
+            name="Forgot"
+            component={ForgotPasswordScreen}
+            options={{ headerShown: true, title: "Esqueci a senha"}}
           />
         </Stack.Navigator>
       </NavigationContainer>
