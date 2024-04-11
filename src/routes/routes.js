@@ -7,6 +7,7 @@ import SplashScreen from "../screens/splashScreen";
 import LoginScreen from "../screens/loginScreen";
 import SignUpScreen from "../screens/signUpScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
+import HomeScreen from "../screens/homeScreen";
 import { NativeBaseProvider } from "native-base";
 
 const Stack = createNativeStackNavigator();
@@ -14,6 +15,7 @@ const Stack = createNativeStackNavigator();
 const AppNavigator = ({navigation}) => {
   return (
     <NativeBaseProvider>
+      {/*  NavigationContainer é o componente que envolve toda a navegação */}
       <NavigationContainer>
         <Stack.Navigator>
          
@@ -36,6 +38,11 @@ const AppNavigator = ({navigation}) => {
             name="Forgot"
             component={ForgotPasswordScreen}
             options={{ headerShown: true, title: "Esqueci a senha", headerTintColor: "#06b6d4"}}
+          />
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{ headerShown: false}}
           />
         </Stack.Navigator>
       </NavigationContainer>

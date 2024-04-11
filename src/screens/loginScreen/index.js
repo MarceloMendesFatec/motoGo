@@ -18,11 +18,16 @@ import { FontAwesome } from '@expo/vector-icons';
 const LoginScreen = ({ navigation }) => {
     //todas as telas recebem o parâmetro navigation
 
+    //funções de navegação
     const signUp = () => {
         navigation.navigate("SignUp");
     };
     const forgotPassword = () => {
         navigation.navigate("Forgot");
+    };
+
+    const homeScreen = () => {
+        navigation.navigate("Home");
     };
 
     return (
@@ -49,7 +54,7 @@ const LoginScreen = ({ navigation }) => {
                         </Link>
                     </Box>
                     <Box mt={4}>
-                        <Button shadow="2" onPress={() => { }} _text={{ fontSize: 18, fontWeight: "bold" }}>
+                        <Button shadow="2" onPress={homeScreen} _text={{ fontSize: 18, fontWeight: "bold" }}>
                             Entrar
                         </Button>
                         <Link justifyContent='center' mt={4} _text={{ fontSize: "sm", fontWeight: "bold", color: "info.700" }} onPress={signUp} >
