@@ -8,8 +8,12 @@ import {
     Button,
     Link,
     Center,
+    Divider,
+    IconButton,
+    HStack
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome } from '@expo/vector-icons';
 
 const LoginScreen = ({ navigation }) => {
     //todas as telas recebem o parâmetro navigation
@@ -32,7 +36,6 @@ const LoginScreen = ({ navigation }) => {
                     </Heading>
                     <MaterialIcons name="sports-motorsports" size={64} color="#06b6d4" />
                 </Center>
-                {/* box do formulario */}
                 <Box>
                     <Box mt={4}>
                         <Input placeholder="Usuário" />
@@ -53,9 +56,21 @@ const LoginScreen = ({ navigation }) => {
                             Não tem uma conta? Cadastre-se
                         </Link>
                     </Box>
+                    <Divider mt={5} />
+                    <Text textAlign={"center"} color={'primary.600'} mt={5}>Ou faça login com : </Text>
+                   
+                    <HStack justifyContent="center" p={2} space={4} >
+                        <Button shadow="2" onPress={() => { /* handle login button click */ }} backgroundColor="#3b5998">
+                            <FontAwesome name="facebook" size={24} color="white" />
+                        </Button>
+                        <Button shadow="2" onPress={() => { /* handle login button click */ }} backgroundColor="#db4437">
+                            <FontAwesome name="google" size={24} color="white" />
+                        </Button>
 
+                    </HStack>
                 </Box>
                 {/* box formulario */}
+
             </Box>
             {/* box central */}
 

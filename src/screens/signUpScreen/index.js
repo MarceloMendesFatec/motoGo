@@ -70,8 +70,7 @@ const SignUpScreen = ({ navigation }) => {
                         {errors.passwordCheck && <Text color="red.500">{errors.passwordCheck}</Text>}
                     </FormControl>
                     <Button onPress={validar} colorScheme="primary" mt={5}>Cadastrar</Button>
-                    <Divider mt={5} />
-                    <Text textAlign={"center"} color={'primary.600'}>Ou faça login com : </Text>
+                    
                 </VStack>
             </ScrollView>
         </NativeBaseProvider>

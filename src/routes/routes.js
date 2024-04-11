@@ -30,13 +30,12 @@ const AppNavigator = ({navigation}) => {
           <Stack.Screen
             name="SignUp"
             component={SignUpScreen}
-            options={{ headerShown: true, title: "Cadastro"}}
-            
+            options={{ headerShown: true, title: "Cadastro de usuário", headerTintColor: "#06b6d4"}}
           />
          <Stack.Screen
             name="Forgot"
             component={ForgotPasswordScreen}
-            options={{ headerShown: true, title: "Esqueci a senha"}}
+            options={{ headerShown: true, title: "Esqueci a senha", headerTintColor: "#06b6d4"}}
           />
         </Stack.Navigator>
       </NavigationContainer>
