@@ -14,6 +14,7 @@ import {
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
+import AppTabNavigator from "../../routes/routesTab";
 
 const LoginScreen = ({ navigation }) => {
     //todas as telas recebem o parâmetro navigation
@@ -27,7 +28,7 @@ const LoginScreen = ({ navigation }) => {
     };
 
     const homeScreen = () => {
-        navigation.navigate("Home");
+       navigation.navigate("Home");
     };
 
     return (

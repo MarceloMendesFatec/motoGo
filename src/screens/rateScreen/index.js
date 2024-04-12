@@ -1,17 +1,12 @@
 import React from "react";
 import { NativeBaseProvider, Text } from "native-base";
-import Header from "../../components/header";
 
-
-
-
-const HomeScreen = ({ navigation }) => {
+const RateScreen = ({ navigation }) => {
     return (
         <NativeBaseProvider>
-         <Header/>
-           
+            <Text>rateScreen</Text>
         </NativeBaseProvider>
     );
-};
+}
 
-export default HomeScreen;
+export default RateScreen;

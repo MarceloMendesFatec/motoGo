@@ -4,7 +4,7 @@ import { HStack, Avatar, Icon } from "native-base";
 import { MaterialIcons } from '@expo/vector-icons';
 import { StatusBar } from "native-base";
 
-const Header = ({ navigation }) => {
+const Header = () => {
     return (
         <NativeBaseProvider>
             <StatusBar backgroundColor="black" barStyle="light-content" />

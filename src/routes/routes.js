@@ -1,5 +1,3 @@
-
-
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
@@ -7,8 +5,9 @@ import SplashScreen from "../screens/splashScreen";
 import LoginScreen from "../screens/loginScreen";
 import SignUpScreen from "../screens/signUpScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
-import HomeScreen from "../screens/homeScreen";
+
 import { NativeBaseProvider } from "native-base";
+import AppTabNavigator from "./routesTab";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,7 +17,6 @@ const AppNavigator = ({navigation}) => {
       {/*  NavigationContainer é o componente que envolve toda a navegação */}
       <NavigationContainer>
         <Stack.Navigator>
-         
           <Stack.Screen
             name="Splash"
             component={SplashScreen}
@@ -39,9 +37,9 @@ const AppNavigator = ({navigation}) => {
             component={ForgotPasswordScreen}
             options={{ headerShown: true, title: "Esqueci a senha", headerTintColor: "#06b6d4"}}
           />
-          <Stack.Screen
+         <Stack.Screen
             name="Home"
-            component={HomeScreen}
+            component={AppTabNavigator}
             options={{ headerShown: false}}
           />
         </Stack.Navigator>
@@ -49,4 +47,5 @@ const AppNavigator = ({navigation}) => {
     </NativeBaseProvider>
   );
 };
+
 export default AppNavigator;
