@@ -2,9 +2,9 @@ import React from "react";
 import { NativeBaseProvider, Text } from "native-base";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialIcons } from "@expo/vector-icons";
-import UserScreen from "../screens/userScreen";
 import HistoricalScreen from "../screens/historicalScreen";
 import HomeScreen from "../screens/homeScreen";
+import RoutesUSer from "./routesUser";
 
 const Tab = createBottomTabNavigator();
 
@@ -37,7 +37,7 @@ const AppTabNavigator = ({ navigation }) => {
                 />
                 <Tab.Screen
                     name="Usuario"
-                    component={UserScreen}
+                    component={RoutesUSer}
                     options={{
                         headerShown: false,
                         tabBarIcon: ({focused}) => {
