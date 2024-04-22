@@ -26,7 +26,7 @@ const UserScreen = ({ navigation }) => {
     };
 
     const logout = () => {
-        // Implement logout functionality here
+        navigation.navigate("Login");
     };
 
     return (
@@ -53,6 +53,7 @@ const UserScreen = ({ navigation }) => {
                 borderRadius={10}
                 p={2}
                 mt={50}
+                m={2}
             >
                 <VStack>
                     <Text fontWeight="bold">Nome:</Text>
@@ -67,10 +68,12 @@ const UserScreen = ({ navigation }) => {
                     <Text>{user.email}</Text>
                 </VStack>
             </Box>
-            <Divider />
+            <Divider mt={140} />
             <Box flex={1} justifyContent="flex-end" p={4}>
                 <Button onPress={logout} colorScheme="red">
-                    Logout
+                    <HStack><MaterialIcons name="logout" size={24} color="white" />
+                        <Text color={"white"}>Sair</Text>
+                    </HStack>
                 </Button>
             </Box>
         </NativeBaseProvider>
