@@ -49,7 +49,7 @@ const SignUpScreen = ({ navigation }) => {
         <NativeBaseProvider>
             <Center>
                 <ScrollView mt={2} >
-                  <Heading size="xl" mb={4} mt={100} textAlign="center" color="primary.500">Seja bem-vindo ao motoGo</Heading>
+                  <Heading size="xl" mb={4} mt={10} textAlign="center" color="primary.500">Seja bem-vindo ao motoGo</Heading>
                     <Box borderWidth={3} borderColor="gray.200" borderRadius={10} p={1}mt={25}>
                         <VStack space={2} mt={1} p={5}  >
                             <FormControl isRequired>

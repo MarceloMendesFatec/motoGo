@@ -34,8 +34,8 @@ const ForgotPasswordScreen = ({ navigation }) => {
                     value={email}
                     onChangeText={setEmail}
                 />
-                <Button onPress={sendPasswordReset} w={100}>
-                    Enviar
+                <Button onPress={sendPasswordReset} w={100} backgroundColor={'primary.500'}>
+                    <Text fontSize={"lg"} color={"white"}>Enviar</Text>
                 </Button>
             </VStack>
 
