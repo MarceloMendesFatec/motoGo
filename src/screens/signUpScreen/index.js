@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NativeBaseProvider, Box, Input, Button, ScrollView, Text, Heading, VStack, FormControl, Divider, Center } from 'native-base';
+import { NativeBaseProvider, Box, Input, Button, ScrollView, Text, Heading, VStack, FormControl,Checkbox, Divider, Center } from 'native-base';
 
 
 const SignUpScreen = ({ navigation }) => {
@@ -48,9 +48,9 @@ const SignUpScreen = ({ navigation }) => {
     return (
         <NativeBaseProvider>
             <Center>
-                <ScrollView mt={9} >
+                <ScrollView mt={2} >
                   <Heading size="xl" mb={4} mt={100} textAlign="center" color="primary.500">Seja bem-vindo ao motoGo</Heading>
-                    <Box borderWidth={3} borderColor="gray.200" borderRadius={10} p={1}mt={50}>
+                    <Box borderWidth={3} borderColor="gray.200" borderRadius={10} p={1}mt={25}>
                         <VStack space={2} mt={1} p={5}  >
                             <FormControl isRequired>
                                 <FormControl.Label _text={{ bold: true }}>Nome</FormControl.Label>
@@ -71,6 +71,16 @@ const SignUpScreen = ({ navigation }) => {
                                 <FormControl.Label>Confirme sua senha</FormControl.Label>
                                 <Input placeholder="Confirme sua senha" type='password' onChangeText={value => setFormData({ ...formData, passwordCheck: value })}/>
                                 {errors.passwordCheck && <Text color="red.500">{errors.passwordCheck}</Text>}
+                            <FormControl isRequired _text={{ bold: true }}>
+                                <FormControl.Label>Confirme sua senha</FormControl.Label>
+                                <Input placeholder="Confirme sua senha" type='password' onChangeText={value => setFormData({ ...formData, passwordCheck: value })}/>
+                                {errors.passwordCheck && <Text color="red.500">{errors.passwordCheck}</Text>}
+                                <FormControl.Label mt={2}>
+                                    <Checkbox value={formData.terms} onChange={value => setFormData({ ...formData, terms: value })}>
+                                        Li e concordo com os <Text color="blue.500" textDecorationLine="underline">termos de uso</Text>
+                                    </Checkbox>
+                                </FormControl.Label>
+                            </FormControl>
                             </FormControl>
                             <Button onPress={validar} colorScheme="primary" mt={5}>Cadastrar</Button>
                         </VStack>
