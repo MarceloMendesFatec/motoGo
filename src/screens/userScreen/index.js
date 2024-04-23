@@ -10,9 +10,12 @@ import {
     Icon,
     VStack,
     Divider,
+    Modal,
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 const UserScreen = ({ navigation }) => {
+
+    const [showModal, setShowModal] = useState(false);
     //user é um array de objeto que contem o usuario logado
     const [user, setUser] = useState({
         nome: "John Doe",
@@ -21,12 +24,24 @@ const UserScreen = ({ navigation }) => {
         cep: "12345-678",
         email: "johndoe@example.com",
     });
+   
     const editUser = () => {
         navigation.navigate("EditUser");
     };
 
-    const logout = () => {
+
+    const handleLogout = () => {
+        // Lógica de logout
+        setShowModal(false);
         navigation.navigate("Login");
+    };
+
+    const openModal = () => {
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
     };
 
     return (
@@ -70,12 +85,32 @@ const UserScreen = ({ navigation }) => {
             </Box>
             <Divider mt={140} />
             <Box flex={1} justifyContent="flex-end" p={4}>
-                <Button onPress={logout} colorScheme="red">
-                    <HStack><MaterialIcons name="logout" size={24} color="white" />
+                <Button onPress={openModal} colorScheme="red">
+                    <HStack>
+                        <MaterialIcons name="logout" size={24} color="white" />
                         <Text color={"white"}>Sair</Text>
                     </HStack>
                 </Button>
             </Box>
+            {showModal && (
+                <Modal isOpen={showModal} onClose={closeModal}>
+                    <Modal.Content>
+                        <Modal.CloseButton />
+                        <Modal.Header>Confirmar saída</Modal.Header>
+                        <Modal.Body>
+                            <Text>Deseja realmente sair do aplicativo?</Text>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button.Group space={2}>
+                                <Button onPress={closeModal}>Cancelar</Button>
+                                <Button onPress={handleLogout} colorScheme="red">
+                                    Sair
+                                </Button>
+                            </Button.Group>
+                        </Modal.Footer>
+                    </Modal.Content>
+                </Modal>
+            )}
         </NativeBaseProvider>
     );
 };
