@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { NativeBaseProvider, Box, Input, Button, ScrollView, Text, Heading, VStack, FormControl, Divider, Center } from 'native-base';
+import { NativeBaseProvider, Box, Checkbox, Input, Button, ScrollView, Text, Heading, VStack, FormControl, Divider, Center } from 'native-base';
 
 
 const SignUpScreen = ({ navigation }) => {
 
     const [formData, setFormData] = useState({})
     const [errors, setErrors] = useState({})
+    const [termsChecked, setTermsChecked] = useState(false);
 
     const cadastrar = () => {
         console.log('Cadastrando');
@@ -37,10 +38,19 @@ const SignUpScreen = ({ navigation }) => {
         }else if (formData.password !== formData.passwordCheck) {
             newErrors.passwordCheck = 'As senhas não conferem';
         }
+
+        // Verificar se os termos de uso foram aceitos
+        if (!termsChecked) {
+            newErrors.terms = 'Você deve aceitar os termos de uso';
+        }
     
         // Definir o estado de erros com o novo objeto de erros
         setErrors(newErrors);
-        cadastrar();
+        
+        // Verificar se não há erros antes de cadastrar
+        if (Object.keys(newErrors).length === 0) {
+            cadastrar();
+        }
     }
     
     
@@ -72,6 +82,15 @@ const SignUpScreen = ({ navigation }) => {
                                 <Input placeholder="Confirme sua senha" type='password' onChangeText={value => setFormData({ ...formData, passwordCheck: value })}/>
                                 {errors.passwordCheck && <Text color="red.500">{errors.passwordCheck}</Text>}
                             </FormControl>
+                            <FormControl isRequired _text={{ bold: true }}>
+                                <FormControl.Label mt={2}>
+                                    <Checkbox value={termsChecked} onChange={() => setTermsChecked(!termsChecked)}>
+                                        Li e concordo com os <Text color="blue.500" textDecorationLine="underline">termos de uso</Text>
+                                    </Checkbox>
+                                </FormControl.Label>
+                                {errors.terms && <Text color="red.500">{errors.terms}</Text>}
+                            </FormControl>
+                            
                             <Button onPress={validar} colorScheme="primary" mt={5}>Cadastrar</Button>
                         </VStack>
                     </Box>
