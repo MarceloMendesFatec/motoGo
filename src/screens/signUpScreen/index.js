@@ -1,17 +1,40 @@
 import React, { useState } from 'react';
 import { NativeBaseProvider, Box, Checkbox, Input, Button, ScrollView, Text, Heading, VStack, FormControl, Divider, Center } from 'native-base';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
 
 
 const SignUpScreen = ({ navigation }) => {
 
+
+    
+   
     const [formData, setFormData] = useState({})
     const [errors, setErrors] = useState({})
     const [termsChecked, setTermsChecked] = useState(false);
+    const auth = getAuth();
+
+
 
     const cadastrar = () => {
         console.log('Cadastrando');
         console.log(formData);
-
+        createUserWithEmailAndPassword(auth, formData.email, formData.password)
+            .then((userCredential) => {
+                // Cadastro com sucesso
+                const user = userCredential.user;
+                console.log('Usuário cadastrado com sucesso');
+                console.log(user);
+                // ...
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log('Erro ao cadastrar');
+                console.log(errorCode);
+                console.log(errorMessage);
+                // ..
+            });
     }
 
     const validar = () => {
