@@ -43,7 +43,7 @@ const SignUpScreen = ({ navigation }) => {
         // Verificar cada campo e adicionar o erro correspondente ao novo objeto de erros
         if (!formData.name) {
             newErrors.name = 'Campo obrigatório';
-        } else if (formData.name.length <= 3) {
+        } else if (formData.name.length < 3) {
             newErrors.name = 'Nome deve ter mais de 3 caracteres';
         }
         if (!formData.email) {
