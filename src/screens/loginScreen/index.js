@@ -10,7 +10,7 @@ import {
     Center,
     Divider,
     IconButton,
-    HStack} from "native-base";
+    HStack,Modal,Icon} from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
@@ -21,6 +21,7 @@ const LoginScreen = ({ navigation }) => {
 
     //state
     const [formData, setFormData] = useState({});
+    const [showModal, setShowModal] = useState(false);
    
     //auth
     const auth = getAuth();
@@ -34,6 +35,10 @@ const LoginScreen = ({ navigation }) => {
 
     const homeScreen = () => {
        navigation.navigate("Home");
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
     };
 
     const login = () => {
@@ -53,6 +58,10 @@ const LoginScreen = ({ navigation }) => {
                 console.log('Erro ao logar');
                 console.log(errorCode);
                 console.log(errorMessage);
+               
+                setShowModal(true);
+                
+                // ...
             });
     };
 
@@ -96,7 +105,7 @@ const LoginScreen = ({ navigation }) => {
                             <FontAwesome name="facebook" size={24} color="white" />
                         </Button>
                         <Button shadow="2" onPress={() => { /* handle login button click */ }} backgroundColor="#db4437">
-                            <FontAwesome name="google" size={24} color="white" />
+                            <FontAwesome name="google" size={18} color="white" />
                         </Button>
 
                     </HStack>
@@ -106,6 +115,25 @@ const LoginScreen = ({ navigation }) => {
             </Box>
             {/* box central */}
 
+
+            {showModal && (
+                <Modal isOpen={showModal} onClose={closeModal}>
+                    <Modal.Content>
+
+                        <HStack justifyContent="center" alignItems="center" m={4}>
+                            <Icon as={MaterialIcons} name="warning" size={12} color="danger.500" mr={2} />
+                            <Text color="danger.500" fontWeight="bold" fontSize="xl">Atenção!</Text>
+                        </HStack>
+                        <Text color="gray.600" textAlign="center" fontSize="md">Usuário ou senha invalidos !</Text>
+                        <Button onPress={closeModal} m={4} alignSelf="center" backgroundColor="danger.500">
+                            Entendido
+                        </Button>
+
+
+
+                    </Modal.Content>
+                </Modal>
+            )}
         </NativeBaseProvider>
     );
 };
