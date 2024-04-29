@@ -10,15 +10,20 @@ import {
     Center,
     Divider,
     IconButton,
-    HStack
-} from "native-base";
+    HStack} from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
-import AppTabNavigator from "../../routes/routesTab";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useState } from "react";
 
 const LoginScreen = ({ navigation }) => {
     //todas as telas recebem o parâmetro navigation
 
+    //state
+    const [formData, setFormData] = useState({});
+   
+    //auth
+    const auth = getAuth();
     //funções de navegação
     const signUp = () => {
         navigation.navigate("SignUp");
@@ -31,6 +36,27 @@ const LoginScreen = ({ navigation }) => {
        navigation.navigate("Home");
     };
 
+    const login = () => {
+        console.log('Logando');
+        signInWithEmailAndPassword(auth, formData.email, formData.password)
+            .then((userCredential) => {
+                // Signed in
+                const user = userCredential.user;
+                console.log('Usuário logado com sucesso');
+                console.log(user);
+                homeScreen();
+                // ...
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log('Erro ao logar');
+                console.log(errorCode);
+                console.log(errorMessage);
+            });
+    };
+
+    
     return (
         <NativeBaseProvider>
             {/* box central */}
@@ -44,10 +70,10 @@ const LoginScreen = ({ navigation }) => {
                 </Center>
                 <Box>
                     <Box mt={4}>
-                        <Input placeholder="Usuário" />
+                        <Input placeholder="Email" onChangeText={value =>setFormData({...formData,email : value})} />
                     </Box>
                     <Box mt={4}>
-                        <Input placeholder="Senha" type="password" />
+                        <Input placeholder="Senha" type="password" onChangeText={value =>setFormData({...formData,password : value})}/>
                     </Box>
                     <Box mt={4}>
                         <Link alignSelf="flex-end" _text={{ color: "info.700" }} onPress={forgotPassword}>
@@ -55,7 +81,7 @@ const LoginScreen = ({ navigation }) => {
                         </Link>
                     </Box>
                     <Box mt={4}>
-                        <Button shadow="2" onPress={homeScreen} _text={{ fontSize: 18, fontWeight: "bold" }}>
+                        <Button shadow="2" onPress={login} _text={{ fontSize: 18, fontWeight: "bold" }}>
                             Entrar
                         </Button>
                         <Link justifyContent='center' mt={4} _text={{ fontSize: "sm", fontWeight: "bold", color: "info.700" }} onPress={signUp} >
