@@ -13,8 +13,12 @@ import {
     Modal,
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
+import { getAuth, signOut } from "firebase/auth";
 const UserScreen = ({ navigation }) => {
 
+    //auth
+    const auth = getAuth();
+    //state
     const [showModal, setShowModal] = useState(false);
     //user é um array de objeto que contem o usuario logado
     const [user, setUser] = useState({
@@ -33,6 +37,14 @@ const UserScreen = ({ navigation }) => {
     const handleLogout = () => {
         // Lógica de logout
         setShowModal(false);
+        signOut(auth).then(() => {
+            // Sign-out successful.
+            console.log("Usuário deslogado");
+        }).catch((error) => {
+            // An error happened.
+            console.log("Erro ao deslogar");
+        });
+
         navigation.navigate("Login");
     };
 
