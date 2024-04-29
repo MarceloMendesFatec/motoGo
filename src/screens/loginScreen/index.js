@@ -14,7 +14,7 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 
 const LoginScreen = ({ navigation }) => {
     //todas as telas recebem o parâmetro navigation
@@ -50,6 +50,7 @@ const LoginScreen = ({ navigation }) => {
                 console.log('Usuário logado com sucesso');
                 console.log(user);
                 homeScreen();
+                
                 // ...
             })
             .catch((error) => {
@@ -65,7 +66,12 @@ const LoginScreen = ({ navigation }) => {
             });
     };
 
-    
+    useEffect(() => {
+        // Limpar o formulário quando o componente for montado
+        setFormData({});
+    }, []);
+
+
     return (
         <NativeBaseProvider>
             {/* box central */}
