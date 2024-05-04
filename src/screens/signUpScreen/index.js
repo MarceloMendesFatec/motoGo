@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NativeBaseProvider, Box, Checkbox, Input, Button, ScrollView, Text, Heading, VStack, FormControl, Divider, Center } from 'native-base';
+import { NativeBaseProvider, Box,Image, Checkbox, Input, Button, ScrollView, Text, Heading, VStack, FormControl, Divider, Center } from 'native-base';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import db from '../../service/firebaseConfig';
 import { setDoc, doc } from "firebase/firestore";
@@ -7,15 +7,15 @@ import { setDoc, doc } from "firebase/firestore";
 
 const SignUpScreen = ({ navigation }) => {
 
-
-    
    
     const [formData, setFormData] = useState({})
     const [errors, setErrors] = useState({})
     const [termsChecked, setTermsChecked] = useState(false);
     const auth = getAuth();
 
-
+    const welcomeScreen = () => {
+        navigation.navigate("Welcome");
+    };
 
     const cadastrar = () => {
         console.log('Cadastrando');
@@ -49,6 +49,7 @@ const SignUpScreen = ({ navigation }) => {
                 console.log(errorMessage);
                 // ..
             });
+            welcomeScreen();
     }
 
 
@@ -91,13 +92,18 @@ const SignUpScreen = ({ navigation }) => {
         }
     }
     
+   
+
     
 
     return (
         <NativeBaseProvider>
             <Center>
-                <ScrollView mt={9} >
-                  <Heading size="xl" mb={4} mt={100} textAlign="center" color="primary.500">Seja bem-vindo ao motoGo</Heading>
+                <ScrollView mt={3} >
+                  <Heading size="xl" mb={4} mt={100} textAlign="center" color="primary.500">Cadastre-se no motoGo!</Heading>
+                  <Center>
+                  <Image source={require('../../assets/cadastro-motogo.png')} alt="motoGoIcon" style={{ width: 100, height: 100 }} />
+                    </Center>
                     <Box borderWidth={3} borderColor="gray.200" borderRadius={10} p={1}mt={50}>
                         <VStack space={2} mt={1} p={5}  >
                             <FormControl isRequired>

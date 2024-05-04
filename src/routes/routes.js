@@ -5,6 +5,7 @@ import SplashScreen from "../screens/splashScreen";
 import LoginScreen from "../screens/loginScreen";
 import SignUpScreen from "../screens/signUpScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
+import WelcomeScreen from "../screens/welcomeScreen";
 
 import { NativeBaseProvider } from "native-base";
 import AppTabNavigator from "./routesTab";
@@ -41,6 +42,11 @@ const AppNavigator = ({navigation}) => {
             name="Home"
             component={AppTabNavigator}
             options={{ headerShown: false}}
+          />
+          <Stack.Screen
+            name="Welcome"
+            component={WelcomeScreen}
+            options={{ headerShown: false }}
           />
         </Stack.Navigator>
       </NavigationContainer>
