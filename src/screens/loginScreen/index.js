@@ -10,14 +10,31 @@ import {
     Center,
     Divider,
     IconButton,
-    HStack,Modal,Icon} from "native-base";
+    HStack,Modal,Icon,Image} from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useState ,useEffect} from "react";
+import { BackHandler } from "react-native";
 
 const LoginScreen = ({ navigation }) => {
     //todas as telas recebem o parâmetro navigation
+
+    useEffect(() => {
+        const backAction = () => {
+          // Intercepta o evento de pressionar o botão de voltar
+          // Neste caso, não faz nada, bloqueando o comportamento padrão
+          return true; // Retorna true para indicar que o evento foi manipulado
+        };
+    
+        const backHandler = BackHandler.addEventListener(
+          "hardwareBackPress",
+          backAction
+        );
+    
+        return () => backHandler.remove(); // Remove o ouvinte quando a tela for desmontada
+      }, []);
+
 
     //state
     const [formData, setFormData] = useState({});
@@ -81,7 +98,7 @@ const LoginScreen = ({ navigation }) => {
                     <Heading color="primary.500" size="4xl">
                         motoGo
                     </Heading>
-                    <MaterialIcons name="sports-motorsports" size={64} color="#06b6d4" />
+                    <Image source={require('../../assets/logo-rafiki.png')} alt="motoGoIcon" style={{ width: 200, height: 200 }} />
                 </Center>
                 <Box>
                     <Box mt={4}>

@@ -23,7 +23,7 @@ const SignUpScreen = ({ navigation }) => {
         createUserWithEmailAndPassword(auth, formData.email, formData.password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                console.log(user.uid);
+                console.log(user.uid);// ID do usuário gerado no auth
     
                 // Crie um documento no Firestore com o ID do usuário gerado e as informações adicionais
                 const userDocRef = doc(db, "users", user.uid); // "users" é o nome da coleção onde você deseja armazenar os dados do usuário
@@ -50,6 +50,8 @@ const SignUpScreen = ({ navigation }) => {
                 // ..
             });
     }
+
+
     const validar = () => {
         const newErrors = {}; // Criar um novo objeto de erros
     
