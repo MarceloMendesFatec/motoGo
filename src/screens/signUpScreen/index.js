@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { NativeBaseProvider, Box, Checkbox, Input, Button, ScrollView, Text, Heading, VStack, FormControl, Divider, Center } from 'native-base';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-
+import db from '../../service/firebaseConfig';
+import { setDoc, doc } from "firebase/firestore";
 
 
 const SignUpScreen = ({ navigation }) => {
@@ -21,11 +22,24 @@ const SignUpScreen = ({ navigation }) => {
         console.log(formData);
         createUserWithEmailAndPassword(auth, formData.email, formData.password)
             .then((userCredential) => {
-                // Cadastro com sucesso
                 const user = userCredential.user;
-                console.log('Usuário cadastrado com sucesso');
-                console.log(user);
-                // ...
+                console.log(user.uid);
+    
+                // Crie um documento no Firestore com o ID do usuário gerado e as informações adicionais
+                const userDocRef = doc(db, "users", user.uid); // "users" é o nome da coleção onde você deseja armazenar os dados do usuário
+                setDoc(userDocRef, {
+                    name: formData.name,
+                    email: formData.email,
+                    // Adicione outras informações que você deseja armazenar
+                })
+                .then(() => {
+                    // Documento criado com sucesso
+                    console.log('Informações do usuário armazenadas no banco  com sucesso');
+                    // Você pode redirecionar o usuário ou fazer qualquer outra coisa aqui
+                })
+                .catch((error) => {
+                    console.error('Erro ao armazenar informações do usuário:', error);
+                });
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -36,7 +50,6 @@ const SignUpScreen = ({ navigation }) => {
                 // ..
             });
     }
-
     const validar = () => {
         const newErrors = {}; // Criar um novo objeto de erros
     
