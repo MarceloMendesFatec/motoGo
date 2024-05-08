@@ -23,21 +23,24 @@ const SignUpScreen = ({ navigation }) => {
                 const user = userCredential.user;
                 console.log(user.uid);// ID do usuário gerado no auth
 
-                // // Crie um documento no Firestore com o ID do usuário gerado e as informações adicionais
-                // const userDocRef = doc(db, "users", user.uid); // "users" é o nome da coleção onde você deseja armazenar os dados do usuário
-                // setDoc(userDocRef, {
-                //     name: formData.name,
-                //     email: formData.email,
-                //     // Adicione outras informações que você deseja armazenar
-                // })
-                // .then(() => {
-                //     // Documento criado com sucesso
-                //     console.log('Informações do usuário armazenadas no banco  com sucesso');
-                //     // Você pode redirecionar o usuário ou fazer qualquer outra coisa aqui
-                // })
-                // .catch((error) => {
-                //     console.error('Erro ao armazenar informações do usuário:', error);
-                // });
+                // Crie um documento no Firestore com o ID do usuário gerado e as informações adicionais
+                const userDocRef = doc(db, "users", user.uid); // "users" é o nome da coleção onde você deseja armazenar os dados do usuário
+                setDoc(userDocRef, {
+                    name: formData.name,
+                    email: formData.email,
+                    telefone: formData.telefone,
+                    cep: formData.cep,
+                    cpf: formData.cpf,
+                    // Adicione outras informações que você deseja armazenar
+                })
+                .then(() => {
+                    // Documento criado com sucesso
+                    console.log('Informações do usuário armazenadas no banco  com sucesso');
+                    // Você pode redirecionar o usuário ou fazer qualquer outra coisa aqui
+                })
+                .catch((error) => {
+                    console.error('Erro ao armazenar informações do usuário:', error);
+                });
             })
             .catch((error) => {
                 const errorCode = error.code;
