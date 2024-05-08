@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
 import { Text, NativeBaseProvider, Button, Container, Image, Heading, Center, Box, FormControl, Input, VStack, ScrollView } from 'native-base';
+ import { doc, setDoc } from "firebase/firestore";
+import { db } from '../../service/firebaseConfig';
 
-const WelcomeScreen = ({ navigation }) => {
-    const [errors, setErrors] = useState({})
-    const [formData, setFormData] = useState({})
+const WelcomeScreen = ({ navigation, route }) => {
+    const Data = route.params.formData;
+    const [errors, setErrors] = useState({});
+    const [formData, setFormData] = useState(route.params && route.params.formData ? route.params.formData : {}); // Verifique se route.params está definido antes de acessá-lo
+
+    const cadastrar = () => {
+        // Aqui você pode colocar a lógica para cadastrar os dados no banco de dados
+        console.log('Dados para cadastrar:', formData);
+    }
 
     const validar = () => {
         const newErrors = {}; // Criar um novo objeto de erros
@@ -36,11 +44,15 @@ const WelcomeScreen = ({ navigation }) => {
         // Verificar se não há erros antes de cadastrar
         if (Object.keys(newErrors).length === 0) {
             console.log('validacao dos inputs ok');
-            // cadastrar();
+            cadastrar(); // Chamar a função de cadastro
         }
+
+        const formDataToSend = {
+            ...Data,
+            ...formData
+        }
+        console.log(JSON.stringify(formDataToSend) + " este objeto esta sendo enviado para o backend");
     }
-
-
 
     return (
         <NativeBaseProvider>
@@ -49,10 +61,10 @@ const WelcomeScreen = ({ navigation }) => {
                     <Heading size="xl" mb={4} mt={100} textAlign="center" color="primary.500">Seja bem vindo ao  motoGo!</Heading>
                     <Image source={require('../../assets/Hello-amico.png')} alt="motoGoIcon" style={{ width: 150, height: 150 }} />
                     <Text fontSize="lg" textAlign="center" color="gray.500" mb={6}>
-                        Por favor, complete as informações no formulário abaixo para garantir o seu primeiro acesso.
+                        Por favor, complete as informações no formulário abaixo para prosseguir para  o seu primeiro acesso.
                     </Text>
-
                 </Center>
+
                 <Box borderWidth={3} borderColor="gray.200" borderRadius={10} p={1} mx={3} mt={1}>
                     <VStack space={2} p={5}  >
                         <FormControl isRequired>
@@ -88,20 +100,19 @@ const WelcomeScreen = ({ navigation }) => {
                         </FormControl>
                         <FormControl isRequired _text={{ bold: true }}>
                             <FormControl.Label>CPF</FormControl.Label>
-                            <Input 
-    placeholder="Digite seu CPF" 
-    keyboardType='numeric' 
-    value={formData.cpf} 
-    maxLength={14} // Define o comprimento máximo para o CPF
-    onChangeText={value => {
-        let formattedValue = value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
-        formattedValue = formattedValue.replace(/^(\d{3})(\d)/, '$1.$2'); // Insere o ponto após os primeiros 3 dígitos
-        formattedValue = formattedValue.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3'); // Insere o segundo ponto após os próximos 3 dígitos
-        formattedValue = formattedValue.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4'); // Insere o traço após os próximos 3 dígitos
-        setFormData({ ...formData, cpf: formattedValue }); // Atualiza o estado com o valor formatado
-    }} 
-/>
-
+                                <Input 
+                                    placeholder="Digite seu CPF" 
+                                    keyboardType='numeric' 
+                                    value={formData.cpf} 
+                                    maxLength={14} // Define o comprimento máximo para o CPF
+                                    onChangeText={value => {
+                                        let formattedValue = value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+                                        formattedValue = formattedValue.replace(/^(\d{3})(\d)/, '$1.$2'); // Insere o ponto após os primeiros 3 dígitos
+                                        formattedValue = formattedValue.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3'); // Insere o segundo ponto após os próximos 3 dígitos
+                                        formattedValue = formattedValue.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4'); // Insere o traço após os próximos 3 dígitos
+                                        setFormData({ ...formData, cpf: formattedValue }); // Atualiza o estado com o valor formatado
+                                     }} 
+                                />
                             {errors.cpf && <Text color="red.500">{errors.cpf}</Text>}
                         </FormControl>
                         <Button onPress={validar} backgroundColor={"#06B6D4"} mt={4}>
