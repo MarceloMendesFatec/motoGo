@@ -15,11 +15,21 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useState ,useEffect} from "react";
-
+import { BackHandler } from "react-native";
 
 const LoginScreen = ({ navigation }) => {
     //todas as telas recebem o parâmetro navigation
+   
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+            // Impedir o usuário de voltar para a tela de login
+            if (e.data.action.type === 'GO_BACK') {
+                e.preventDefault();
+            }
+        });
 
+        return unsubscribe;
+    }, [navigation]);
 
     //state
     const [formData, setFormData] = useState({});
