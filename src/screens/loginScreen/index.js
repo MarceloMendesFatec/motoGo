@@ -15,7 +15,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useState ,useEffect} from "react";
-import { BackHandler } from "react-native";
+
 
 const LoginScreen = ({ navigation }) => {
     //todas as telas recebem o parâmetro navigation
