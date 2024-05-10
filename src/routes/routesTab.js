@@ -21,6 +21,7 @@ const AppTabNavigator = ({ navigation }) => {
                             return <MaterialIcons name={focused ? "home" : "home"} size={44} color={focused ? "#06b6d4" : "gray"} />;
                         },
                         tabBarShowLabel: false,
+                        gestureEnabled: false
                     }}
                 />
 
