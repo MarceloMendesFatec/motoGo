@@ -42,7 +42,7 @@ const SignUpScreen = ({ navigation }) => {
                     email: formData.email,
                     telefone: formData.telefone,
                     cep: formData.cep,
-                    cpf: formData.cpf,
+                    
                     // Adicione outras informações que você deseja armazenar
                 })
                     .then(() => {
@@ -111,12 +111,6 @@ const SignUpScreen = ({ navigation }) => {
             newErrors.cep = 'CEP inválido';
         }
 
-        // Validar CPF
-        if (!formData.cpf) {
-            newErrors.cpf = 'CPF é obrigatório';
-        } else if (!formData.cpf || !/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(formData.cpf)) {
-            newErrors.cpf = 'CPF inválido';
-        }
 
         // Definir o estado de erros com o novo objeto de erros
         setErrors(newErrors);
@@ -187,21 +181,7 @@ const SignUpScreen = ({ navigation }) => {
                                     {errors.cep && <Text color="red.500">{errors.cep}</Text>}
                                 </FormControl>
                                 <FormControl isRequired _text={{ bold: true }}>
-                                    <FormControl.Label>CPF</FormControl.Label>
-                                    <Input
-                                        placeholder="Digite seu CPF"
-                                        keyboardType='numeric'
-                                        value={formData.cpf}
-                                        maxLength={14} // Define o comprimento máximo para o CPF
-                                        onChangeText={value => {
-                                            let formattedValue = value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
-                                            formattedValue = formattedValue.replace(/^(\d{3})(\d)/, '$1.$2'); // Insere o ponto após os primeiros 3 dígitos
-                                            formattedValue = formattedValue.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3'); // Insere o segundo ponto após os próximos 3 dígitos
-                                            formattedValue = formattedValue.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4'); // Insere o traço após os próximos 3 dígitos
-                                            setFormData({ ...formData, cpf: formattedValue }); // Atualiza o estado com o valor formatado
-                                        }}
-                                    />
-                                    {errors.cpf && <Text color="red.500">{errors.cpf}</Text>}
+                                
                                     <FormControl isRequired>
                                         <FormControl.Label _text={{ bold: true }}>Senha</FormControl.Label>
                                         <Input placeholder="Digite sua senha" type='password' onChangeText={value => setFormData({ ...formData, password: value })} />
