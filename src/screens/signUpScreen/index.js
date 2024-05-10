@@ -12,7 +12,6 @@ const SignUpScreen = ({ navigation }) => {
     const [formData, setFormData] = useState({})
     const [errors, setErrors] = useState({})
     const [termsChecked, setTermsChecked] = useState(false);
-    const [isInputFocused, setIsInputFocused] = useState(false);
     const auth = getAuth();
 
 

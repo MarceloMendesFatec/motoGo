@@ -85,7 +85,8 @@ const LoginScreen = ({ navigation }) => {
                     </Heading>
                     <Image source={require('../../assets/logo-rafiki.png')} alt="motoGoIcon" style={{ width: 200, height: 200 }} />
                 </Center>
-                <Box>
+               
+                <Box flex={1} mt={4}>
                     <Box mt={4}>
                         <Input placeholder="Email" onChangeText={value =>setFormData({...formData,email : value})} />
                     </Box>
@@ -108,7 +109,7 @@ const LoginScreen = ({ navigation }) => {
                     <Divider mt={5} />
                     <Text textAlign={"center"} color={'primary.600'} mt={5}>Ou faça login com : </Text>
                    
-                    <HStack justifyContent="center" p={2} space={4} >
+                    <HStack justifyContent="center" p={2} space={4}  >
                         <Button shadow="2" onPress={() => { /* handle login button click */ }} backgroundColor="#3b5998">
                             <FontAwesome name="facebook" size={24} color="white" />
                         </Button>
