@@ -14,8 +14,10 @@ import {
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { getAuth, signOut } from "firebase/auth";
-const UserScreen = ({ navigation }) => {
+import UserOptions from "../../components/userOptions";
 
+
+const UserScreen = ({ navigation }) => {
     //auth
     const auth = getAuth();
     //state
@@ -28,22 +30,23 @@ const UserScreen = ({ navigation }) => {
         cep: "12345-678",
         email: "johndoe@example.com",
     });
-   
+
     const editUser = () => {
         navigation.navigate("EditUser");
     };
 
-
     const handleLogout = () => {
         // Lógica de logout
         setShowModal(false);
-        signOut(auth).then(() => {
-            // Sign-out successful.
-            console.log("Usuário deslogado");
-        }).catch((error) => {
-            // An error happened.
-            console.log("Erro ao deslogar");
-        });
+        signOut(auth)
+            .then(() => {
+                // Sign-out successful.
+                console.log("Usuário deslogado");
+            })
+            .catch((error) => {
+                // An error happened.
+                console.log("Erro ao deslogar");
+            });
 
         navigation.navigate("Login");
     };
@@ -74,30 +77,12 @@ const UserScreen = ({ navigation }) => {
                     {user.email}
                 </Text>
             </Box>
-            <Box
-                borderWidth={3}
-                borderColor="gray.200"
-                borderRadius={10}
-                p={2}
-                mt={50}
-                m={2}
-            >
-                <VStack>
-                    <Text fontWeight="bold">Nome:</Text>
-                    <Text>{user.nome}</Text>
-                    <Text fontWeight="bold">Idade:</Text>
-                    <Text>{user.idade}</Text>
-                    <Text fontWeight="bold">Telefone:</Text>
-                    <Text>{user.telefone}</Text>
-                    <Text fontWeight="bold">CEP:</Text>
-                    <Text>{user.cep}</Text>
-                    <Text fontWeight="bold">Email:</Text>
-                    <Text>{user.email}</Text>
-                </VStack>
-            </Box>
-            <Divider mt={140} />
+            <UserOptions />
+
+           
             <Box flex={1} justifyContent="flex-end" p={4}>
-                <Button onPress={openModal} colorScheme="red">
+               <Divider bg="gray.500" thickness="2" my="3" orientation="horizontal" />
+               <Button onPress={openModal} colorScheme="red">
                     <HStack>
                         <MaterialIcons name="logout" size={24} color="white" />
                         <Text color={"white"}>Sair</Text>
