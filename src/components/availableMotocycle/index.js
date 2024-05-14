@@ -1,95 +1,98 @@
-
 import React from "react";
-import { NativeBaseProvider, Text, Box, FlatList, Image, ScrollView, Container } from "native-base";
-
+import {
+    NativeBaseProvider,
+    Text,
+    Box,
+    FlatList,
+    Image,
+    VStack,
+    HStack,
+    IconButton,
+    Icon,
+    Pressable,
+    Badge,
+} from "native-base";
+import { AntDesign } from '@expo/vector-icons';
+import { TouchableOpacity, View } from "react-native";
 
 const AvailableMotocycle = () => {
     // Mock data for the list of motorcycles
     const data = [
         {
             id: 1,
-            image: "https://example.com/motorcycle1.jpg",
-            price: "$5,000",
+            name: "Honda CBR600RR",
+            displacement: "600cc",
             year: "2022",
-            mileage: "10,000 km",
-            location: "City, State",
+            image: "https://wallpaperaccess.com/full/317501.jpg",
         },
         {
             id: 2,
-            image: "https://example.com/motorcycle2.jpg",
-            price: "$7,500",
-            year: "2021",
-            mileage: "5,000 km",
-            location: "City, State",
+            name: "Yamaha R6",
+            displacement: "600cc",
+            year: "2022",
+            image: "https://wallpaperaccess.com/full/317501.jpg",
         },
         {
             id: 3,
-            image: "https://example.com/motorcycle3.jpg",
-            price: "$10,000",
-            year: "2020",
-            mileage: "2,000 km",
-            location: "City, State",
+            name: "Kawasaki Ninja ZX-6R",
+            displacement: "636cc",
+            year: "2022",
+            image: "https://wallpaperaccess.com/full/317501.jpg",
         },
+        // Ensure unique IDs for all items
         {
             id: 4,
-            image: "https://example.com/motorcycle4.jpg",
-            price: "$15,000",
-            year: "2019",
-            mileage: "1,000 km",
-            location: "City, State",
+            name: "Suzuki GSX-R600",
+            displacement: "600cc",
+            year: "2022",
+            image: "https://wallpaperaccess.com/full/317501.jpg",
         },
         {
             id: 5,
-            image: "https://example.com/motorcycle5.jpg",
-            price: "$20,000",
-            year: "2018",
-            mileage: "500 km",
-            location: "City, State",
+            name: "Ducati Panigale V2",
+            displacement: "955cc",
+            year: "2022",
+            image: "https://wallpaperaccess.com/full/317501.jpg",
         },
         {
             id: 6,
-            image: "https://example.com/motorcycle6.jpg",
-            price: "$25,000",
-            year: "2017",
-            mileage: "100 km",
-            location: "City, State",
+            name: "Triumph Daytona 675",
+            displacement: "675cc",
+            year: "2022",
+            image: "https://wallpaperaccess.com/full/317501.jpg",
         },
-        {
-            id: 7,
-            image: "https://example.com/motorcycle7.jpg",
-            price: "$30,000",
-            year: "2016",
-            mileage: "50 km",
-            location: "City, State",
-        },
-        {
-            id: 8,
-            image: "https://example.com/motorcycle8.jpg",
-            price: "$35,000",
-            year: "2015",
-            mileage: "10 km",
-            location: "City, State",
-        },
-        {
-            id: 9,
-            image: "https://example.com/motorcycle9.jpg",
-            price: "$40,000",
-            year: "2014",
-            mileage: "5 km",
-            location: "City, State",
-        }
-        // Add more mock data as needed
     ];
 
     // Render item component for each motorcycle
     const renderItem = ({ item }) => (
-        <Box borderWidth={1} p={4} my={2} w="40%" mx={5} >
-            <Image source={{ uri: item.image }} alt="Motorcycle" h={200} />
-            <Text>{item.price}</Text>
-            <Text>{item.year}</Text>
-            <Text>{item.mileage}</Text>
-            <Text>{item.location}</Text>
-        </Box>
+        <Pressable 
+        style={{
+                borderRadius: 16,
+                margin: 18, 
+                width: '40%',
+                backgroundColor: '#f2f2f2',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.25, shadowRadius: 3.84, elevation: 5,
+                padding: 10,
+            }}
+            onPress={() => console.log(item)}
+        >
+          <Box>
+            <Image
+                source={{ uri: item.image }}
+                alt="Motorcycle"
+                style={{ height: 150, width: 150, resizeMode: 'contain' }}
+            />
+            <View style={{ marginTop: 3 }}>
+                <Text style={{ fontSize: 16, fontWeight: '700' }}>{item.name}</Text>
+                <Badge colorScheme="darkblue" variant="solid" rounded={5} mt={5}>
+                <Text style={{ fontSize: 16 }} color={"white"}>{item.displacement}</Text>
+                </Badge>
+                <Text style={{ fontSize: 16 }} textAlign={"center"} mt={1}>{item.year}</Text>
+            </View>
+            </Box>
+        </Pressable>
     );
 
     return (
@@ -99,7 +102,8 @@ const AvailableMotocycle = () => {
                 numColumns={2}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id.toString()}
-                mt={-200}
+                contentContainerStyle={{ paddingBottom: 20 }}
+                mt={-200}// Adjust content padding if necessary
             />
         </NativeBaseProvider>
     );

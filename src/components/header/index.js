@@ -37,8 +37,8 @@ const Header = () => {
 
     return (
         <NativeBaseProvider >
-            <Box bg="gray.100" p={4} flex={1}>
-            <HStack h={20}>
+            <Box bg="gray.100" p={4} mt={0}>
+            <HStack h={20} >
                 <Box bg="white" size={16} borderRadius="xl" m={5}>
                     <Center p={1}>
                         <MaterialIcons name="location-pin" size={44} color="gray" />
