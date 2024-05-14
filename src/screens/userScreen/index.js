@@ -11,11 +11,13 @@ import {
     VStack,
     Divider,
     Modal,
-    Spinner} from "native-base";
+    Spinner
+} from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { collection, doc, getFirestore, getDoc } from "firebase/firestore";
 import { AntDesign } from "@expo/vector-icons";
+import { ImagePicker, Permissions } from "expo";
 import UserOptions from "../../components/userOptions";
 import db from "../../service/firebaseConfig";
 
@@ -48,6 +50,14 @@ const UserScreen = ({ navigation }) => {
             }
         });
 
+        const requestStoragePermission = async () => {
+            const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+            if (status !== "granted") {
+                console.error("Permissão de acesso à galeria negada");
+            }
+        };
+
+        requestStoragePermission();
         return unsubscribe; // Função de limpeza para evitar vazamentos de memória
     }, [auth, db]); // Inclui auth e db na lista de dependências
 
@@ -62,9 +72,9 @@ const UserScreen = ({ navigation }) => {
         );
     }
 
-    const editUser = () => {
-        navigation.navigate("EditUser");
-    };
+    const editPhoto = async () => {
+    
+      };
 
     const handleLogout = () => {
         // Lógica de logout
@@ -101,7 +111,7 @@ const UserScreen = ({ navigation }) => {
                     <IconButton
                         mt={1}
                         icon={<MaterialIcons name="edit" size={24} color="white" />}
-                        onPress={editUser}
+                        onPress={editPhoto}
                     />
                 </HStack>
                 <Text color="white" fontSize="md" fontWeight="bold">
