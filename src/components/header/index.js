@@ -36,8 +36,8 @@ const Header = () => {
     }
 
     return (
-        <NativeBaseProvider>
-            <StatusBar backgroundColor="black" barStyle="light-content" />
+        <NativeBaseProvider >
+            <Box bg="gray.100" p={4} flex={1}>
             <HStack h={20}>
                 <Box bg="white" size={16} borderRadius="xl" m={5}>
                     <Center p={1}>
@@ -58,6 +58,9 @@ const Header = () => {
                 </Avatar>    
             </HStack>
             <Divider mt={4} />
+            <Text fontSize={"xl"} bold mt={2} ml={5} color="primary.600">Olá, {user?.name || "Visitante"}</Text>
+            <Text fontSize={"xl"} bold mt={1} ml={5} color="primary.600">Escolha a sua motocicleta :  </Text>
+            </Box>         
         </NativeBaseProvider>
     );
 };
