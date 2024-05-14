@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
     NativeBaseProvider,
     Text,
@@ -13,23 +13,43 @@ import {
     Modal,
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, signOut , onAuthStateChanged} from "firebase/auth";
+import { collection, doc, getFirestore, getDoc } from "firebase/firestore";
+import { AntDesign } from "@expo/vector-icons";
 import UserOptions from "../../components/userOptions";
+import db from "../../service/firebaseConfig";
+
 
 
 const UserScreen = ({ navigation }) => {
+   const [user, setUser] = useState(null); // Estado do usuário [null, {dados do usuário}]
+   
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (authenticatedUser) => {
+          if (authenticatedUser) {
+            const { uid } = authenticatedUser; // ID do usuário logado
+            const userRef = doc(collection(db, "users"), uid); // Referência ao documento do usuário
+            const userDoc = await getDoc(userRef); // Obtem o documento do usuário
+    
+            if (userDoc.exists) {
+              setUser(userDoc.data()); // Define o estado do usuário com os dados do documento
+            } else {
+              console.error("Documento do usuário não encontrado");
+            }
+          } else {
+            setUser(null); // Limpa o estado do usuário se não estiver autenticado
+          }
+        });
+    
+        return unsubscribe; // Função de limpeza para evitar vazamentos de memória
+      }, [auth, db]); // Inclui auth e db na lista de dependências
+    
     //auth
     const auth = getAuth();
     //state
     const [showModal, setShowModal] = useState(false);
     //user é um array de objeto que contem o usuario logado
-    const [user, setUser] = useState({
-        nome: "John Doe",
-        idade: 30,
-        telefone: "1234567890",
-        cep: "12345-678",
-        email: "johndoe@example.com",
-    });
+    
 
     const editUser = () => {
         navigation.navigate("EditUser");
@@ -65,7 +85,7 @@ const UserScreen = ({ navigation }) => {
                 <Avatar size="2xl" mt={10} />
                 <HStack>
                     <Text color="white" fontSize="2xl" fontWeight="bold" mt={2}>
-                        {user.nome}
+                        {user?.name}
                     </Text>
                     <IconButton
                         mt={1}
@@ -74,7 +94,7 @@ const UserScreen = ({ navigation }) => {
                     />
                 </HStack>
                 <Text color="white" fontSize="md" fontWeight="bold">
-                    {user.email}
+                    {user?.email}
                 </Text>
             </Box>
             <UserOptions />
