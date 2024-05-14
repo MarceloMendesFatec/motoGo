@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import {
     NativeBaseProvider,
     Text,
@@ -16,22 +16,24 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { collection, doc, getFirestore, getDoc } from "firebase/firestore";
-import { AntDesign } from "@expo/vector-icons";
-import { ImagePicker, Permissions } from "expo";
 import UserOptions from "../../components/userOptions";
 import db from "../../service/firebaseConfig";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
 
 
 
 const UserScreen = ({ navigation }) => {
-    const [user, setUser] = useState(null); // Estado do usuário [null, {dados do usuário}]
+    const [user, setUser] = useState({});
     const [loading, setLoading] = useState(true); // Estado de carregamento
     //auth
     const auth = getAuth();
     //state
     const [showModal, setShowModal] = useState(false);
     //user é um array de objeto que contem o usuario logado
+    const storage = getStorage();
 
+    // UseEffect para verificar se o usuário está autenticado e carregar seus dados do banco de dados
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (authenticatedUser) => {
             if (authenticatedUser) {
@@ -40,8 +42,11 @@ const UserScreen = ({ navigation }) => {
                 const userDoc = await getDoc(userRef); // Obtem o documento do usuário
 
                 if (userDoc.exists) {
-                    setUser(userDoc.data()); // Define o estado do usuário com os dados do documento
                     setLoading(false); // Altera o estado de carregamento
+                    setUser({ ...user, uid });
+                    console.log("Usuário autenticado", uid);
+                    setUser(userDoc.data()); // Define o estado do usuário com os dados do documento
+                    console.log("user data:", userDoc.data());
                 } else {
                     console.error("Documento do usuário não encontrado");
                 }
@@ -50,18 +55,13 @@ const UserScreen = ({ navigation }) => {
             }
         });
 
-        const requestStoragePermission = async () => {
-            const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-            if (status !== "granted") {
-                console.error("Permissão de acesso à galeria negada");
-            }
-        };
+        return unsubscribe;
 
-        requestStoragePermission();
-        return unsubscribe; // Função de limpeza para evitar vazamentos de memória
+
     }, [auth, db]); // Inclui auth e db na lista de dependências
 
 
+    // Se o estado de carregamento for verdadeiro, exibe um spinner
     if (loading) {
         return (
             <NativeBaseProvider>
@@ -72,10 +72,14 @@ const UserScreen = ({ navigation }) => {
         );
     }
 
-    const editPhoto = async () => {
     
-      };
+    const editPhoto = async () => {
+       
+    }
 
+
+
+    // Função para deslogar o usuário
     const handleLogout = () => {
         // Lógica de logout
         setShowModal(false);
@@ -103,7 +107,7 @@ const UserScreen = ({ navigation }) => {
     return (
         <NativeBaseProvider>
             <Box bg="primary.500" py={4} alignItems="center">
-                <Avatar size="2xl" mt={10} />
+                <Avatar size="2xl" mt={10} source={{ uri: user?.avatar || 'https://via.placeholder.com/150' }} />
                 <HStack>
                     <Text color="white" fontSize="2xl" fontWeight="bold" mt={2}>
                         {user?.name}

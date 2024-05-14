@@ -22,7 +22,8 @@
     "react-native-animatable": "^1.4.0",
     "react-native-image-picker": "^7.1.2",
     "react-native-permissions": "^4.1.5",
-    "react-navigation": "^5.0.0"
+    "react-navigation": "^5.0.0",
+    "expo-file-system": "~17.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0"
