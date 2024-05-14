@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
     NativeBaseProvider,
     Text,
@@ -7,93 +7,101 @@ import {
     Avatar,
     IconButton,
     HStack,
-    Icon,
-    VStack,
     Divider,
     Modal,
     Spinner
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
-import { collection, doc, getFirestore, getDoc } from "firebase/firestore";
+import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import UserOptions from "../../components/userOptions";
 import db from "../../service/firebaseConfig";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-
-
-
+import * as ImagePicker from 'expo-image-picker';
 
 const UserScreen = ({ navigation }) => {
-    const [user, setUser] = useState({});
-    const [loading, setLoading] = useState(true); // Estado de carregamento
-    //auth
-    const auth = getAuth();
-    //state
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [image, setImage] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    //user é um array de objeto que contem o usuario logado
+
+    const auth = getAuth();
     const storage = getStorage();
 
-    // UseEffect para verificar se o usuário está autenticado e carregar seus dados do banco de dados
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (authenticatedUser) => {
             if (authenticatedUser) {
-                const { uid } = authenticatedUser; // ID do usuário logado
-                const userRef = doc(collection(db, "users"), uid); // Referência ao documento do usuário
-                const userDoc = await getDoc(userRef); // Obtem o documento do usuário
+                const { uid } = authenticatedUser;
+                const userRef = doc(collection(db, "users"), uid);
+                const userDoc = await getDoc(userRef);
 
-                if (userDoc.exists) {
-                    setLoading(false); // Altera o estado de carregamento
-                    setUser({ ...user, uid });
-                    console.log("Usuário autenticado", uid);
-                    setUser(userDoc.data()); // Define o estado do usuário com os dados do documento
-                    console.log("user data:", userDoc.data());
+                if (userDoc.exists()) {
+                    setUser({ uid, ...userDoc.data() });
                 } else {
                     console.error("Documento do usuário não encontrado");
                 }
+                setLoading(false);
             } else {
-                setUser(null); // Limpa o estado do usuário se não estiver autenticado
+                setUser(null);
+                setLoading(false);
             }
         });
 
         return unsubscribe;
+    }, [auth]);
 
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
 
-    }, [auth, db]); // Inclui auth e db na lista de dependências
+        if (!result.canceled) {
+            const localUri = result.assets[0].uri;
+            setImage(localUri);
+            await uploadImage(localUri);
+        }
+    };
 
+    const uploadImage = async (uri) => {
+        if (!user?.uid) {
+            console.error("Usuário não autenticado");
+            return;
+        }
 
-    // Se o estado de carregamento for verdadeiro, exibe um spinner
-    if (loading) {
-        return (
-            <NativeBaseProvider>
-                <Box flex={1} justifyContent="center" alignItems="center">
-                    <Spinner size="lg" color="primary.500" />
-                </Box>
-            </NativeBaseProvider>
-        );
-    }
+        try {
+            const response = await fetch(uri);
+            const blob = await response.blob();
+            const imageRef = ref(storage, `avatars/${user.uid}.jpg`);
 
-    
-    const editPhoto = async () => {
-       
-    }
+            await uploadBytes(imageRef, blob);
+            console.log("Imagem enviada para o Firebase Storage");
 
+            const downloadURL = await getDownloadURL(imageRef);
+            console.log("URL da imagem:", downloadURL);
 
+            const userRef = doc(collection(db, "users"), user.uid);
+            await updateDoc(userRef, { avatar: downloadURL });
+            console.log("URL da imagem atualizada no Firestore");
 
-    // Função para deslogar o usuário
+            setUser((prevUser) => ({ ...prevUser, avatar: downloadURL }));
+        } catch (error) {
+            console.error("Erro ao enviar imagem para o Firebase Storage:", error);
+        }
+    };
+
     const handleLogout = () => {
-        // Lógica de logout
         setShowModal(false);
         signOut(auth)
             .then(() => {
-                // Sign-out successful.
                 console.log("Usuário deslogado");
+                navigation.navigate("Login");
             })
             .catch((error) => {
-                // An error happened.
-                console.log("Erro ao deslogar");
+                console.log("Erro ao deslogar", error);
             });
-
-        navigation.navigate("Login");
     };
 
     const openModal = () => {
@@ -103,6 +111,16 @@ const UserScreen = ({ navigation }) => {
     const closeModal = () => {
         setShowModal(false);
     };
+
+    if (loading) {
+        return (
+            <NativeBaseProvider>
+                <Box flex={1} justifyContent="center" alignItems="center">
+                    <Spinner size="lg" color="primary.500" />
+                </Box>
+            </NativeBaseProvider>
+        );
+    }
 
     return (
         <NativeBaseProvider>
@@ -115,7 +133,7 @@ const UserScreen = ({ navigation }) => {
                     <IconButton
                         mt={1}
                         icon={<MaterialIcons name="edit" size={24} color="white" />}
-                        onPress={editPhoto}
+                        onPress={pickImage}
                     />
                 </HStack>
                 <Text color="white" fontSize="md" fontWeight="bold">
@@ -123,8 +141,6 @@ const UserScreen = ({ navigation }) => {
                 </Text>
             </Box>
             <UserOptions />
-
-
             <Box flex={1} justifyContent="flex-end" p={4}>
                 <Divider bg="gray.500" thickness="2" my="3" orientation="horizontal" />
                 <Button onPress={openModal} colorScheme="red">
