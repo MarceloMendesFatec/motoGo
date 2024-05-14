@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
     NativeBaseProvider,
     Text,
@@ -11,9 +11,9 @@ import {
     VStack,
     Divider,
     Modal,
-} from "native-base";
+    Spinner} from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
-import { getAuth, signOut , onAuthStateChanged} from "firebase/auth";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { collection, doc, getFirestore, getDoc } from "firebase/firestore";
 import { AntDesign } from "@expo/vector-icons";
 import UserOptions from "../../components/userOptions";
@@ -22,34 +22,45 @@ import db from "../../service/firebaseConfig";
 
 
 const UserScreen = ({ navigation }) => {
-   const [user, setUser] = useState(null); // Estado do usuário [null, {dados do usuário}]
-   
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (authenticatedUser) => {
-          if (authenticatedUser) {
-            const { uid } = authenticatedUser; // ID do usuário logado
-            const userRef = doc(collection(db, "users"), uid); // Referência ao documento do usuário
-            const userDoc = await getDoc(userRef); // Obtem o documento do usuário
-    
-            if (userDoc.exists) {
-              setUser(userDoc.data()); // Define o estado do usuário com os dados do documento
-            } else {
-              console.error("Documento do usuário não encontrado");
-            }
-          } else {
-            setUser(null); // Limpa o estado do usuário se não estiver autenticado
-          }
-        });
-    
-        return unsubscribe; // Função de limpeza para evitar vazamentos de memória
-      }, [auth, db]); // Inclui auth e db na lista de dependências
-    
+    const [user, setUser] = useState(null); // Estado do usuário [null, {dados do usuário}]
+    const [loading, setLoading] = useState(true); // Estado de carregamento
     //auth
     const auth = getAuth();
     //state
     const [showModal, setShowModal] = useState(false);
     //user é um array de objeto que contem o usuario logado
-    
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (authenticatedUser) => {
+            if (authenticatedUser) {
+                const { uid } = authenticatedUser; // ID do usuário logado
+                const userRef = doc(collection(db, "users"), uid); // Referência ao documento do usuário
+                const userDoc = await getDoc(userRef); // Obtem o documento do usuário
+
+                if (userDoc.exists) {
+                    setUser(userDoc.data()); // Define o estado do usuário com os dados do documento
+                    setLoading(false); // Altera o estado de carregamento
+                } else {
+                    console.error("Documento do usuário não encontrado");
+                }
+            } else {
+                setUser(null); // Limpa o estado do usuário se não estiver autenticado
+            }
+        });
+
+        return unsubscribe; // Função de limpeza para evitar vazamentos de memória
+    }, [auth, db]); // Inclui auth e db na lista de dependências
+
+
+    if (loading) {
+        return (
+            <NativeBaseProvider>
+                <Box flex={1} justifyContent="center" alignItems="center">
+                    <Spinner size="lg" color="primary.500" />
+                </Box>
+            </NativeBaseProvider>
+        );
+    }
 
     const editUser = () => {
         navigation.navigate("EditUser");
@@ -99,10 +110,10 @@ const UserScreen = ({ navigation }) => {
             </Box>
             <UserOptions />
 
-           
+
             <Box flex={1} justifyContent="flex-end" p={4}>
-               <Divider bg="gray.500" thickness="2" my="3" orientation="horizontal" />
-               <Button onPress={openModal} colorScheme="red">
+                <Divider bg="gray.500" thickness="2" my="3" orientation="horizontal" />
+                <Button onPress={openModal} colorScheme="red">
                     <HStack>
                         <MaterialIcons name="logout" size={24} color="white" />
                         <Text color={"white"}>Sair</Text>
