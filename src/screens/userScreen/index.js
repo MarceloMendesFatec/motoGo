@@ -28,6 +28,7 @@ const UserScreen = ({ navigation }) => {
     const auth = getAuth();
     const storage = getStorage();
 
+    //verificar se o usuario esta logado
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (authenticatedUser) => {
             if (authenticatedUser) {
@@ -50,6 +51,7 @@ const UserScreen = ({ navigation }) => {
         return unsubscribe;
     }, [auth]);
 
+    //funcao para escolher a imagem da galeria
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -65,6 +67,7 @@ const UserScreen = ({ navigation }) => {
         }
     };
 
+    //funcao para enviar a imagem para o firebase storage
     const uploadImage = async (uri) => {
         if (!user?.uid) {
             console.error("Usuário não autenticado");
@@ -92,6 +95,7 @@ const UserScreen = ({ navigation }) => {
         }
     };
 
+    //deslogar o usuario
     const handleLogout = () => {
         setShowModal(false);
         signOut(auth)
@@ -112,6 +116,7 @@ const UserScreen = ({ navigation }) => {
         setShowModal(false);
     };
 
+    //carregar o spinner enquanto a requisicao nao termina
     if (loading) {
         return (
             <NativeBaseProvider>
@@ -125,7 +130,9 @@ const UserScreen = ({ navigation }) => {
     return (
         <NativeBaseProvider>
             <Box bg="primary.500" py={4} alignItems="center">
-                <Avatar size="2xl" mt={10} source={{ uri: user?.avatar || 'https://via.placeholder.com/150' }} />
+                <Avatar size="2xl" mt={10} source={{ uri: user?.avatar || 'https://via.placeholder.com/150' }}>
+                    <Avatar.Badge bg="green.500" />    
+                </Avatar>
                 <HStack>
                     <Text color="white" fontSize="2xl" fontWeight="bold" mt={2}>
                         {user?.name}
