@@ -5,7 +5,7 @@ import SplashScreen from "../screens/splashScreen";
 import LoginScreen from "../screens/loginScreen";
 import SignUpScreen from "../screens/signUpScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
-
+import AddMotorcycleScreen from "../screens/addMotorcycleScreen";
 
 import { NativeBaseProvider } from "native-base";
 import AppTabNavigator from "./routesTab";
@@ -43,7 +43,11 @@ const AppNavigator = ({navigation}) => {
             component={AppTabNavigator}
             options={{ headerShown: false }}
           />
-         
+         <Stack.Screen
+            name="AddMotorcycle"
+            component={AddMotorcycleScreen}
+            options={{ headerShown: true, title: "Adicionar moto", headerTintColor: "#06b6d4"}}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>

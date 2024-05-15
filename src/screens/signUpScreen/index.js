@@ -24,7 +24,7 @@ const SignUpScreen = ({ navigation }) => {
 
     const homeScreen = () => {
         navigation.navigate("Home");
-     };
+    };
 
     const cadastrar = async () => {
         console.log('Cadastrando');
@@ -42,7 +42,7 @@ const SignUpScreen = ({ navigation }) => {
                     email: formData.email,
                     telefone: formData.telefone,
                     cep: formData.cep,
-                    
+
                     // Adicione outras informações que você deseja armazenar
                 })
                     .then(() => {
@@ -181,7 +181,7 @@ const SignUpScreen = ({ navigation }) => {
                                     {errors.cep && <Text color="red.500">{errors.cep}</Text>}
                                 </FormControl>
                                 <FormControl isRequired _text={{ bold: true }}>
-                                
+
                                     <FormControl isRequired>
                                         <FormControl.Label _text={{ bold: true }}>Senha</FormControl.Label>
                                         <Input placeholder="Digite sua senha" type='password' onChangeText={value => setFormData({ ...formData, password: value })} />
