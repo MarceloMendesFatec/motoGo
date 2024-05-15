@@ -75,6 +75,7 @@ const UserScreen = ({ navigation }) => {
         }
 
         try {
+           setLoading(true);
             const response = await fetch(uri);
             const blob = await response.blob();
             const imageRef = ref(storage, `avatars/${user.uid}.jpg`);
@@ -90,6 +91,7 @@ const UserScreen = ({ navigation }) => {
             console.log("URL da imagem atualizada no Firestore");
 
             setUser((prevUser) => ({ ...prevUser, avatar: downloadURL }));
+            setLoading(false);
         } catch (error) {
             console.error("Erro ao enviar imagem para o Firebase Storage:", error);
         }

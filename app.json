@@ -12,28 +12,6 @@
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
-      ],
-      [
-        "expo-camera",
-        {
-          "cameraPermission": "The app accesses your camera to let you take photos."
-        }
-      ],
-      [
-        "expo-media-library",
-        {
-          "mediaLibraryPermission": "The app accesses your media library to let you select images to share with your friends."
-        }
-      ],
-      [
-        "expo-permissions",
-        {
-          "permissions": [
-            "CAMERA",
-            "READ_EXTERNAL_STORAGE",
-            "WRITE_EXTERNAL_STORAGE"
-          ]
-        }
       ]
     ],
     "splash": {
