@@ -30,7 +30,7 @@ const HomeScreen = ({ navigation }) => {
         position="absolute"
         size="sm"
         icon={<FontAwesome5 name="plus" size={30} color="white" />}
-        onPress={() => navigation.navigate("Add")}
+        onPress={() => navigation.navigate("MotorcycleDetails")}
       />
     </NativeBaseProvider>
   );
