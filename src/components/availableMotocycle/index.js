@@ -24,6 +24,7 @@ const AvailableMotocycle = () => {
             displacement: "600cc",
             year: "2022",
             image: "https://wallpaperaccess.com/full/317501.jpg",
+            price: 150,
         },
         {
             id: 2,
@@ -31,6 +32,7 @@ const AvailableMotocycle = () => {
             displacement: "600cc",
             year: "2022",
             image: "https://wallpaperaccess.com/full/317501.jpg",
+            price: 150,
         },
         {
             id: 3,
@@ -38,14 +40,15 @@ const AvailableMotocycle = () => {
             displacement: "636cc",
             year: "2022",
             image: "https://wallpaperaccess.com/full/317501.jpg",
+            price: 150,
         },
-        // Ensure unique IDs for all items
         {
             id: 4,
             name: "Suzuki GSX-R600",
             displacement: "600cc",
             year: "2022",
             image: "https://wallpaperaccess.com/full/317501.jpg",
+            price: 150,
         },
         {
             id: 5,
@@ -53,6 +56,7 @@ const AvailableMotocycle = () => {
             displacement: "955cc",
             year: "2022",
             image: "https://wallpaperaccess.com/full/317501.jpg",
+            price: 150,
         },
         {
             id: 6,
@@ -60,6 +64,7 @@ const AvailableMotocycle = () => {
             displacement: "675cc",
             year: "2022",
             image: "https://wallpaperaccess.com/full/317501.jpg",
+            price: 150,
         },
     ];
 
@@ -67,29 +72,31 @@ const AvailableMotocycle = () => {
     const renderItem = ({ item }) => (
         <Pressable 
         style={{
-                borderRadius: 16,
-                margin: 18, 
-                width: '40%',
+                borderRadius: 16, 
+                width: '45%',
                 backgroundColor: '#f2f2f2',
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.25, shadowRadius: 3.84, elevation: 5,
-                padding: 10,
             }}
+            m={2}
+            p={3}
             onPress={() => console.log(item)}
         >
           <Box>
             <Image
                 source={{ uri: item.image }}
                 alt="Motorcycle"
-                style={{ height: 150, width: 150, resizeMode: 'contain' }}
+                style={{ height: 150, width: "170", resizeMode: 'contain' , borderRadius: 16}}
             />
             <View style={{ marginTop: 3 }}>
                 <Text style={{ fontSize: 16, fontWeight: '700' }}>{item.name}</Text>
                 <Badge colorScheme="darkblue" variant="solid" rounded={5} mt={5}>
                 <Text style={{ fontSize: 16 }} color={"white"}>{item.displacement}</Text>
                 </Badge>
-                <Text style={{ fontSize: 16 }} textAlign={"center"} mt={1}>{item.year}</Text>
+                <Badge colorScheme="info" variant="outline" rounded={5} mt={1} >
+                <Text color="primary.700" style={{ fontSize: 16 }} textAlign={"center"} mt={1}>R$:{item.price}/DIA</Text>
+                </Badge>
             </View>
             </Box>
         </Pressable>
