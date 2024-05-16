@@ -30,14 +30,18 @@ import ImagePicker from 'expo-image-picker';
 const AddMotorcycleScreen = ({ navigation }) => {
     const [formData, setFormData] = useState({})
     const [errors, setErrors] = useState({})
+   
+   // Dados para o formulário
     const fabricantes = [
         "Honda", "Yamaha", "Suzuki", "Kawasaki", "Ducati", "BMW", "Triumph", "KTM", "Harley-Davidson"
     ];
     const ano = Array.from({ length: new Date().getFullYear() - 1990 + 1 }, (_, i) => (1990 + i).toString());
     const cores = ["Branco", "Preto", "Vermelho", "Azul", "Verde", "Amarelo", "Laranja", "Roxo", "Prata", "Cinza", "Marrom", "Bege", "Dourado", "Rosa", "Outra"];
 
+    // Função para exibir um toast
     const toast = useToast();
 
+    // Função para validar os campos do formulário
     const validar = () => {
         const newErrors = {};
         console.log(formData);
@@ -217,6 +221,7 @@ const AddMotorcycleScreen = ({ navigation }) => {
                     </Box>
                 </VStack>
                 {/* Fecha formulario */}
+               {/* Botão para concluir a locação */}
                 <Box p={5}>
                     <Button
                         color={"#06B6D4"}
@@ -230,6 +235,7 @@ const AddMotorcycleScreen = ({ navigation }) => {
                         Concluir a locação
                     </Button>
                 </Box>
+                {/* Fecha botao */}
             </Container>
 
         </NativeBaseProvider>
