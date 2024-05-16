@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import {
     View,
     TouchableOpacity,
+    StyleSheet,
+    Style
 } from 'react-native';
 import {
     Box,
@@ -22,16 +24,27 @@ import {
     Stack,
     Alert,
     Text,
-    Button
+    Button,
+    ScrollView,
+    IconButton
 
 } from 'native-base';
-import ImagePicker from 'expo-image-picker';
+import { MaterialIcons } from '@expo/vector-icons';
+import db from "../../service/firebaseConfig";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import * as ImagePicker from 'expo-image-picker';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+
 
 const AddMotorcycleScreen = ({ navigation }) => {
+    
+    
     const [formData, setFormData] = useState({})
     const [errors, setErrors] = useState({})
-   
-   // Dados para o formulário
+    const [image, setImage] = useState(null);
+
+    // Dados para o formulário
     const fabricantes = [
         "Honda", "Yamaha", "Suzuki", "Kawasaki", "Ducati", "BMW", "Triumph", "KTM", "Harley-Davidson"
     ];
@@ -40,6 +53,21 @@ const AddMotorcycleScreen = ({ navigation }) => {
 
     // Função para exibir um toast
     const toast = useToast();
+    const auth = getAuth();
+
+    useEffect(() => {
+        
+        onAuthStateChanged(auth, async (authenticatedUser) => {
+            if (authenticatedUser) {
+                const { uid } = authenticatedUser;
+                console.log(uid);
+                setFormData({ ...formData, uid: uid });
+                console.log(formData);
+            } else {
+                console.log("Usuário não autenticado");
+            }
+        });
+    }, [auth]);
 
     // Função para validar os campos do formulário
     const validar = () => {
@@ -91,11 +119,65 @@ const AddMotorcycleScreen = ({ navigation }) => {
         navigation.navigate("Home");
     };
 
+    const pickImage = async () => {
+       
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            alert('Desculpe, precisamos da permissão para acessar a câmera!');
+        } else {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
+
+            if (!result.cancelled) {
+                const localUri = result.uri;
+                setImage(...image , localUri);
+                console.log(image);
+                
+            }
+        }
+    }
 
     return (
         <NativeBaseProvider>
-            <Container>
-               { /* Formulario */}
+            
+            <ScrollView horizontal flex={2} my={2} mx={5} p={0} showsHorizontalScrollIndicator={false}>
+                <Box w={200} h={200} bg={'gray.300'} m={4} >
+                    <Center flex={1}>
+                        <IconButton
+                        icon={<MaterialIcons name="camera-alt" size={44} color="#06b6d4" />}
+                        onPress={pickImage}
+                        />
+                    </Center>
+                </Box>
+                <Box w={200} h={200} bg={'gray.300'} m={4}>
+                    <Center flex={1}>
+                        <MaterialIcons name="camera-alt" size={44} color="#06b6d4" />
+                    </Center>
+                </Box>
+                <Box w={200} h={200} bg={'gray.300'} m={4}>
+                    <Center flex={1}>
+                        <MaterialIcons name="camera-alt" size={44} color="#06b6d4" />
+                    </Center>
+                </Box>
+                <Box w={200} h={200} bg={'gray.300'} m={4}>
+                    <Center flex={1}>
+                        <MaterialIcons name="camera-alt" size={44} color="#06b6d4" />
+                    </Center>
+                </Box>
+                <Box w={200} h={200} bg={'gray.300'} m={4}>
+                    <Center flex={1}>
+                        <MaterialIcons name="camera-alt" size={44} color="#06b6d4" />
+                    </Center>
+                </Box>
+
+            </ScrollView>
+
+            <Container flex={2}>
+                {/* Formulario */}
                 <VStack space={2} p={5}>
                     <Box borderWidth={3} borderColor="gray.200" borderRadius={10} p={3} bg="white">
                         <Stack direction="row">
@@ -164,7 +246,7 @@ const AddMotorcycleScreen = ({ navigation }) => {
                                         <Select.Item key={index} label={cor} value={cor} />
                                     ))}
                                 </Select>
-                                {errors.cor && ( <Text color="red.500" fontSize="xs" mt={1}>{errors.cor}</Text> )}
+                                {errors.cor && (<Text color="red.500" fontSize="xs" mt={1}>{errors.cor}</Text>)}
 
                             </FormControl>
                         </Stack>
@@ -191,20 +273,17 @@ const AddMotorcycleScreen = ({ navigation }) => {
                         <Stack direction="row">
                             <FormControl isRequired w={150} mx={2}>
                                 <FormControl.Label _text={{ bold: true }}>Refrigeração</FormControl.Label>
-                                <Radio.Group
-                                    name="refrigeracao"
-                                    value={formData.refrigeracao}
-                                    onChange={(value) => setFormData({ ...formData, refrigeracao: value })}
+                                <Select
+                                    selectedValue={formData.refrigeracao}
+                                    _selectedItem={{
+                                        bg: 'primary.100',
+                                        endIcon: <CheckIcon size={4} />,
+                                    }}
+                                    onValueChange={(value) => setFormData({ ...formData, refrigeracao: value })}
                                 >
-                                    <VStack space={1}>
-                                        <Radio value="AR">
-                                            <Text>AR</Text>
-                                        </Radio>
-                                        <Radio value="LIQUIDA">
-                                            <Text>LIQUIDA</Text>
-                                        </Radio>
-                                    </VStack>
-                                </Radio.Group>
+                                    <Select.Item label="AR" value="AR" />
+                                    <Select.Item label="LIQUIDA" value="LIQUIDA" />
+                                </Select>
                                 {errors.refrigeracao && (<Text color="red.500" fontSize="xs" mt={1}>{errors.refrigeracao}</Text>)}
                             </FormControl>
                             <FormControl isRequired w={150} mx={2}>
@@ -221,12 +300,12 @@ const AddMotorcycleScreen = ({ navigation }) => {
                     </Box>
                 </VStack>
                 {/* Fecha formulario */}
-               {/* Botão para concluir a locação */}
+                {/* Botão para concluir a locação */}
                 <Box p={5}>
                     <Button
                         color={"#06B6D4"}
                         title="Concluir a locação"
-                        _text={{ color: 'white' , bold: true , fontSize: 'lg'}}
+                        _text={{ color: 'white', bold: true, fontSize: 'lg' }}
                         onPress={() => {
                             validar();
 
