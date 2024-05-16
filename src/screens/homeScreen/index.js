@@ -1,11 +1,12 @@
-import { React, useEffect } from "react";
-import { NativeBaseProvider, Text, Fab, Icon, ScrollView, Container } from "native-base";
+import React, { useEffect, useState } from "react";
+import { NativeBaseProvider, Fab } from "native-base";
 import Header from "../../components/header";
 import AvailableMotocycle from "../../components/availableMotocycle";
 import { BackHandler } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
 
 const HomeScreen = ({ navigation }) => {
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     const backAction = () => {
@@ -21,11 +22,10 @@ const HomeScreen = ({ navigation }) => {
     return () => backHandler.remove();
   }, []);
 
-
   return (
     <NativeBaseProvider>
-      <Header/>
-      <AvailableMotocycle/>
+      <Header key={refresh} />
+      <AvailableMotocycle />
       <Fab
         position="absolute"
         size="sm"

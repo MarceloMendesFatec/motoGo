@@ -3,7 +3,7 @@ import { Box, Center, Divider, NativeBaseProvider, Text, VStack, HStack, Avatar,
 import { MaterialIcons } from '@expo/vector-icons';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, collection } from "firebase/firestore";
-import db from "../../service/firebaseConfig"; // Certifique-se de que o caminho está correto
+import db from "../../service/firebaseConfig";
 
 const Header = () => {
     const [user, setUser] = useState(null);
@@ -32,35 +32,35 @@ const Header = () => {
     }, []);
 
     if (loading) {
-        return null; // Ou um spinner se preferir
+        return null;
     }
 
     return (
-        <NativeBaseProvider >
+        <NativeBaseProvider>
             <Box bg="gray.100" p={4} mt={0}>
-            <HStack h={20} >
-                <Box bg="white" size={16} borderRadius="xl" m={5}>
-                    <Center p={1}>
-                        <MaterialIcons name="location-pin" size={44} color="gray" />
-                    </Center>
-                </Box>
-                <VStack mt={5}>
-                    <Text fontSize={"md"}>Sua Localização:</Text>
-                    <Text bold fontSize={"xl"}>Itu, SP</Text>
-                </VStack>
-                <Avatar 
-                    mx={24} 
-                    mt={5} 
-                    size={"lg"} 
-                    source={{ uri: user?.avatar || 'https://via.placeholder.com/150' }} 
-                >   
-                    <Avatar.Badge bg="green.500" />
-                </Avatar>    
-            </HStack>
-            <Divider mt={4} />
-            <Text fontSize={"xl"} bold mt={2} ml={5} color="primary.600">Olá, {user?.name || "Visitante"}</Text>
-            <Text fontSize={"xl"} bold mt={1} ml={5} color="primary.600">Escolha a sua motocicleta :  </Text>
-            </Box>         
+                <HStack h={20}>
+                    <Box bg="white" size={16} borderRadius="xl" m={5}>
+                        <Center p={1}>
+                            <MaterialIcons name="location-pin" size={44} color="gray" />
+                        </Center>
+                    </Box>
+                    <VStack mt={5}>
+                        <Text fontSize={"md"}>Sua Localização:</Text>
+                        <Text bold fontSize={"xl"}>Itu, SP</Text>
+                    </VStack>
+                    <Avatar
+                        mx={24}
+                        mt={5}
+                        size={"lg"}
+                        source={{ uri: user?.avatar || 'https://via.placeholder.com/150' }}
+                        // Adicione uma chave única para forçar a atualização da imagem
+                        key={user?.avatar}
+                    />
+                </HStack>
+                <Divider mt={4} />
+                <Text fontSize={"xl"} bold mt={2} ml={5} color="primary.600">Olá, {user?.name || "Visitante"}</Text>
+                <Text fontSize={"xl"} bold mt={1} ml={5} color="primary.600">Escolha a sua motocicleta :  </Text>
+            </Box>
         </NativeBaseProvider>
     );
 };
