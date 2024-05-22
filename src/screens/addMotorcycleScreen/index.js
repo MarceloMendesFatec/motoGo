@@ -26,7 +26,8 @@ import {
     Text,
     Button,
     ScrollView,
-    IconButton
+    IconButton,
+    Spinner
 
 } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -37,11 +38,13 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 
 
+
 const AddMotorcycleScreen = ({ navigation }) => {
     
-    
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({})
     const [errors, setErrors] = useState({})
+    const [images, setImages] = useState([]); // Alterado de setImage para setImages
     const [image, setImage] = useState(null);
 
     // Dados para o formulário
@@ -54,6 +57,7 @@ const AddMotorcycleScreen = ({ navigation }) => {
     // Função para exibir um toast
     const toast = useToast();
     const auth = getAuth();
+    const storage = getStorage();
 
     useEffect(() => {
         
@@ -68,6 +72,17 @@ const AddMotorcycleScreen = ({ navigation }) => {
             }
         });
     }, [auth]);
+
+     //carregar o spinner enquanto a requisicao nao termina
+     if (loading) {
+        return (
+            <NativeBaseProvider>
+                <Box flex={1} justifyContent="center" alignItems="center">
+                    <Spinner size="lg" color="primary.500" />
+                </Box>
+            </NativeBaseProvider>
+        );
+    }
 
     // Função para validar os campos do formulário
     const validar = () => {
@@ -119,62 +134,92 @@ const AddMotorcycleScreen = ({ navigation }) => {
         navigation.navigate("Home");
     };
 
+       //funcao para escolher a imagem da galeria
     const pickImage = async () => {
-       
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-            alert('Desculpe, precisamos da permissão para acessar a câmera!');
-        } else {
-            let result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                allowsEditing: true,
-                aspect: [4, 3],
-                quality: 1,
-            });
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
 
-            if (!result.cancelled) {
-                const localUri = result.uri;
-                setImage(...image , localUri);
-                console.log(image);
-                
-            }
+        if (!result.canceled) {
+            const localUri = result.assets[0].uri;
+            setImage(localUri);
+            await uploadImage(localUri);
         }
-    }
+    };
+
+    const uploadImage = async (uri) => {
+        if (!formData.uid) {
+            console.error("Usuário não autenticado");
+            return;
+        }
+
+        try {
+           setLoading(true);
+            const response = await fetch(uri);
+            const blob = await response.blob();
+            const randomNumber = Math.floor(Math.random() * 1000); // Generate a random number between 0 and 999
+            const imageName = `motoImagens/${formData.uid}/${randomNumber}.jpg`; // Append the random number to the image name
+            const imageRef = ref(storage, imageName); // Use the updated image name in the reference
+
+            await uploadBytes(imageRef, blob);
+            console.log("Imagem enviada para o Firebase Storage");
+
+            const downloadURL = await getDownloadURL(imageRef);
+            console.log("URL da imagem:", downloadURL);
+
+            setImages([...images, downloadURL]);
+
+
+            setLoading(false);
+        } catch (error) {
+            console.error("Erro ao enviar imagem para o Firebase Storage:", error);
+        }
+    };
+
+
+   
 
     return (
         <NativeBaseProvider>
             
             <ScrollView horizontal flex={2} my={2} mx={5} p={0} showsHorizontalScrollIndicator={false}>
-                <Box w={200} h={200} bg={'gray.300'} m={4} >
-                    <Center flex={1}>
-                        <IconButton
-                        icon={<MaterialIcons name="camera-alt" size={44} color="#06b6d4" />}
-                        onPress={pickImage}
-                        />
-                    </Center>
-                </Box>
-                <Box w={200} h={200} bg={'gray.300'} m={4}>
-                    <Center flex={1}>
-                        <MaterialIcons name="camera-alt" size={44} color="#06b6d4" />
-                    </Center>
-                </Box>
-                <Box w={200} h={200} bg={'gray.300'} m={4}>
-                    <Center flex={1}>
-                        <MaterialIcons name="camera-alt" size={44} color="#06b6d4" />
-                    </Center>
-                </Box>
-                <Box w={200} h={200} bg={'gray.300'} m={4}>
-                    <Center flex={1}>
-                        <MaterialIcons name="camera-alt" size={44} color="#06b6d4" />
-                    </Center>
-                </Box>
-                <Box w={200} h={200} bg={'gray.300'} m={4}>
-                    <Center flex={1}>
-                        <MaterialIcons name="camera-alt" size={44} color="#06b6d4" />
-                    </Center>
-                </Box>
-
-            </ScrollView>
+                <HStack space={2} alignItems="center">
+                    <TouchableOpacity onPress={pickImage}>
+                        <Box
+                            w={100}
+                            h={100}
+                            bg="gray.300"
+                            borderRadius={10}
+                            justifyContent="center"
+                            alignItems="center"
+                        >
+                            <MaterialIcons name="add-a-photo" size={40} color="black" />
+                        </Box>
+                    </TouchableOpacity>
+                    {images.map((image, index) => (
+                        <Box
+                            key={index}
+                            w={150}
+                            h={150}
+                            bg="gray.100"
+                            borderRadius={10}
+                            justifyContent="center"
+                            alignItems="center"
+                        >
+                            <Image
+                                source={{ uri: image }}
+                                alt="Alternate Text"
+                                size="2xl"
+                                resizeMode="cover"
+                                borderRadius={10}
+                            />
+                        </Box>
+                    ))}
+                </HStack>
+        	</ScrollView>
 
             <Container flex={2}>
                 {/* Formulario */}
@@ -311,7 +356,7 @@ const AddMotorcycleScreen = ({ navigation }) => {
 
                         }}
                     >
-                        Concluir a locação
+                        Adicionar moto 
                     </Button>
                 </Box>
                 {/* Fecha botao */}
