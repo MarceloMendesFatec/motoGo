@@ -131,7 +131,8 @@ const UserScreen = ({ navigation }) => {
 
     return (
         <NativeBaseProvider>
-            <Box bg="primary.500" py={4} alignItems="center">
+         
+           <Box bg="primary.500" py={4} alignItems="center">
                 <Avatar size="2xl" mt={10} source={{ uri: user?.avatar || 'https://via.placeholder.com/150' }}>
                     <Avatar.Badge bg="green.500" />    
                 </Avatar>

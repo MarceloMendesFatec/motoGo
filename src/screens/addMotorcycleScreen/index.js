@@ -3,7 +3,7 @@ import {
     View,
     TouchableOpacity,
     StyleSheet,
-    Style
+    Keyboard
 } from 'react-native';
 import {
     Box,
@@ -27,8 +27,8 @@ import {
     Button,
     ScrollView,
     IconButton,
-    Spinner
-
+    Spinner,
+    KeyboardAvoidingView
 } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
 import db from "../../service/firebaseConfig";
@@ -36,45 +36,51 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as ImagePicker from 'expo-image-picker';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-
-
-
 const AddMotorcycleScreen = ({ navigation }) => {
-    
     const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState({})
-    const [errors, setErrors] = useState({})
-    const [images, setImages] = useState([]); // Alterado de setImage para setImages
+    const [formData, setFormData] = useState({});
+    const [formDataToSend, setFormDataToSend] = useState({});
+    const [errors, setErrors] = useState({});
+    const [images, setImages] = useState([]); 
     const [image, setImage] = useState(null);
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
-    // Dados para o formulário
     const fabricantes = [
         "Honda", "Yamaha", "Suzuki", "Kawasaki", "Ducati", "BMW", "Triumph", "KTM", "Harley-Davidson"
     ];
     const ano = Array.from({ length: new Date().getFullYear() - 1990 + 1 }, (_, i) => (1990 + i).toString());
     const cores = ["Branco", "Preto", "Vermelho", "Azul", "Verde", "Amarelo", "Laranja", "Roxo", "Prata", "Cinza", "Marrom", "Bege", "Dourado", "Rosa", "Outra"];
 
-    // Função para exibir um toast
     const toast = useToast();
     const auth = getAuth();
     const storage = getStorage();
 
     useEffect(() => {
-        
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            setKeyboardVisible(true); 
+        });
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+            setKeyboardVisible(false);
+        });
+
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
+
+    useEffect(() => {
         onAuthStateChanged(auth, async (authenticatedUser) => {
             if (authenticatedUser) {
                 const { uid } = authenticatedUser;
-                console.log(uid);
                 setFormData({ ...formData, uid: uid });
-                console.log(formData);
             } else {
                 console.log("Usuário não autenticado");
             }
         });
     }, [auth]);
 
-     //carregar o spinner enquanto a requisicao nao termina
-     if (loading) {
+    if (loading) {
         return (
             <NativeBaseProvider>
                 <Box flex={1} justifyContent="center" alignItems="center">
@@ -84,37 +90,22 @@ const AddMotorcycleScreen = ({ navigation }) => {
         );
     }
 
-    // Função para validar os campos do formulário
     const validar = () => {
         const newErrors = {};
-        console.log(formData);
-        if (!formData.fabricante) {
-            newErrors.fabricante = "Campo obrigatório";
-        }
-        if (!formData.ano) {
-            newErrors.ano = "Campo obrigatório";
-        }
-        if (!formData.modelo) {
-            newErrors.modelo = "Campo obrigatório";
-        }
-        if (!formData.cor) {
-            newErrors.cor = "Campo obrigatório";
-        }
-        if (!formData.preco) {
-            newErrors.preco = "Campo obrigatório";
-        }
-        if (!formData.cilindradas) {
-            newErrors.cilindradas = "Campo obrigatório";
-        }
-        if (!formData.refrigeracao) {
-            newErrors.refrigeracao = "Campo obrigatório";
-        }
-        if (!formData.quilometragem) {
-            newErrors.quilometragem = "Campo obrigatório";
-        }
+        console.log("Objeto com os dados e imagens a serem enviados:")
+        setFormDataToSend({ ...formData, ...images });
+        console.log(formDataToSend);
+        if (!formData.fabricante) newErrors.fabricante = "Campo obrigatório";
+        if (!formData.ano) newErrors.ano = "Campo obrigatório";
+        if (!formData.modelo) newErrors.modelo = "Campo obrigatório";
+        if (!formData.cor) newErrors.cor = "Campo obrigatório";
+        if (!formData.preco) newErrors.preco = "Campo obrigatório";
+        if (!formData.cilindradas) newErrors.cilindradas = "Campo obrigatório";
+        if (!formData.refrigeracao) newErrors.refrigeracao = "Campo obrigatório";
+        if (!formData.quilometragem) newErrors.quilometragem = "Campo obrigatório";
+
         setErrors(newErrors);
         if (Object.keys(newErrors).length === 0) {
-            console.log(formData);
             toast.show({
                 title: "Locação cadastrada com sucesso",
                 status: "success",
@@ -127,14 +118,12 @@ const AddMotorcycleScreen = ({ navigation }) => {
                 homeScreen();
             }, 4000);
         }
-
     };
 
     const homeScreen = () => {
         navigation.navigate("Home");
     };
 
-       //funcao para escolher a imagem da galeria
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -157,36 +146,27 @@ const AddMotorcycleScreen = ({ navigation }) => {
         }
 
         try {
-           setLoading(true);
+            setLoading(true);
             const response = await fetch(uri);
             const blob = await response.blob();
-            const randomNumber = Math.floor(Math.random() * 1000); // Generate a random number between 0 and 999
-            const imageName = `motoImagens/${formData.uid}/${randomNumber}.jpg`; // Append the random number to the image name
-            const imageRef = ref(storage, imageName); // Use the updated image name in the reference
+            const randomNumber = Math.floor(Math.random() * 1000);
+            const imageName = `motoImagens/${formData.uid}/${randomNumber}.jpg`;
+            const imageRef = ref(storage, imageName);
 
             await uploadBytes(imageRef, blob);
-            console.log("Imagem enviada para o Firebase Storage");
-
             const downloadURL = await getDownloadURL(imageRef);
-            console.log("URL da imagem:", downloadURL);
 
             setImages([...images, downloadURL]);
-
-
             setLoading(false);
         } catch (error) {
             console.error("Erro ao enviar imagem para o Firebase Storage:", error);
         }
     };
 
-
-   
-
     return (
         <NativeBaseProvider>
-            
-            <ScrollView horizontal flex={2} my={2} mx={5} p={0} showsHorizontalScrollIndicator={false}>
-                <HStack space={2} alignItems="center">
+            <ScrollView horizontal flex={2} my={2} mx={5}  showsHorizontalScrollIndicator={false}>
+                <HStack space={2} alignItems="center"  marginLeft={120}>
                     <TouchableOpacity onPress={pickImage}>
                         <Box
                             w={100}
@@ -219,10 +199,9 @@ const AddMotorcycleScreen = ({ navigation }) => {
                         </Box>
                     ))}
                 </HStack>
-        	</ScrollView>
+            </ScrollView>
 
             <Container flex={2}>
-                {/* Formulario */}
                 <VStack space={2} p={5}>
                     <Box borderWidth={3} borderColor="gray.200" borderRadius={10} p={3} bg="white">
                         <Stack direction="row">
@@ -275,7 +254,6 @@ const AddMotorcycleScreen = ({ navigation }) => {
                                     onChangeText={(value) => setFormData({ ...formData, modelo: value })}
                                 />
                                 {errors.modelo && (<Text color="red.500" fontSize="xs" mt={1}>{errors.modelo}</Text>)}
-
                             </FormControl>
                             <FormControl isRequired w={150} mx={2}>
                                 <FormControl.Label _text={{ bold: true }}>Cor</FormControl.Label>
@@ -292,7 +270,6 @@ const AddMotorcycleScreen = ({ navigation }) => {
                                     ))}
                                 </Select>
                                 {errors.cor && (<Text color="red.500" fontSize="xs" mt={1}>{errors.cor}</Text>)}
-
                             </FormControl>
                         </Stack>
                         <Stack direction="row">
@@ -339,29 +316,26 @@ const AddMotorcycleScreen = ({ navigation }) => {
                                     onChangeText={(value) => setFormData({ ...formData, quilometragem: value })}
                                 />
                                 {errors.quilometragem && (<Text color="red.500" fontSize="xs" mt={1}>{errors.quilometragem}</Text>)}
-
                             </FormControl>
                         </Stack>
                     </Box>
                 </VStack>
-                {/* Fecha formulario */}
-                {/* Botão para concluir a locação */}
-                <Box p={5}>
+            </Container>
+
+            {!isKeyboardVisible && (
+                <Box flex={1}>
                     <Button
                         color={"#06B6D4"}
                         title="Concluir a locação"
+                        mx={100}
+                        mt={85}
                         _text={{ color: 'white', bold: true, fontSize: 'lg' }}
-                        onPress={() => {
-                            validar();
-
-                        }}
+                        onPress={validar}
                     >
-                        Adicionar moto 
+                        Adicionar moto
                     </Button>
                 </Box>
-                {/* Fecha botao */}
-            </Container>
-
+            )}
         </NativeBaseProvider>
     );
 };
