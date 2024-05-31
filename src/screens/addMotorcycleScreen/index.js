@@ -35,6 +35,7 @@ import db from "../../service/firebaseConfig";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as ImagePicker from 'expo-image-picker';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 
 const AddMotorcycleScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
@@ -92,6 +93,27 @@ const AddMotorcycleScreen = ({ navigation }) => {
 
     const validar = () => {
         const newErrors = {};
+        if (images.length === 0) {
+            toast.show({
+                title: "Atenção!",
+                status: "warning",
+                duration: 3800,
+                placement: "top",
+                render: () => (
+                    <Box bg="#FFA500" px={4} py={3} borderRadius={10}>
+                        <HStack space={3} alignItems="center">
+                       <MaterialIcons name="warning" size={24} color="white" />
+                        <VStack>
+                          <Text fontSize="xl" fontWeight={'bold'} color="white">Atenção!</Text>
+                        <Text fontSize="lg" color="white">É obrigatório adicionar uma imagem ao anúncio</Text>
+                        </VStack>
+                       </HStack>
+                    </Box>
+                )
+            });
+            
+           return;
+        }
         console.log("Objeto com os dados e imagens a serem enviados:")
         setFormDataToSend({ ...formData, ...images });
         console.log(formDataToSend);
@@ -106,6 +128,13 @@ const AddMotorcycleScreen = ({ navigation }) => {
 
         setErrors(newErrors);
         if (Object.keys(newErrors).length === 0) {
+            enviarAnuncio();
+        }
+    };
+
+    const enviarAnuncio = async () => {
+        try {
+            await addDoc(collection(db, "motos-disponiveis"), formDataToSend);
             toast.show({
                 title: "Locação cadastrada com sucesso",
                 status: "success",
@@ -117,6 +146,16 @@ const AddMotorcycleScreen = ({ navigation }) => {
             setTimeout(() => {
                 homeScreen();
             }, 4000);
+        } catch (error) {
+            console.error("Erro ao cadastrar anúncio:", error);
+            toast.show({
+                title: "Erro ao cadastrar locação",
+                status: "error",
+                description: "Ocorreu um erro ao cadastrar sua moto para locação. Tente novamente mais tarde.",
+                duration: 3800,
+                backgroundColor: "#E53E3E",
+                size: "lg"
+            });
         }
     };
 
