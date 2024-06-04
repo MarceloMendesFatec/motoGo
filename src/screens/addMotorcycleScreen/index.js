@@ -127,7 +127,8 @@ const AddMotorcycleScreen = ({ navigation }) => {
         if (!formData.quilometragem) newErrors.quilometragem = "Campo obrigatório";
 
         setErrors(newErrors);
-        if (Object.keys(newErrors).length === 0) {
+        if (Object.keys(newErrors).length === 0 ) {
+            
             enviarAnuncio();
         }
     };

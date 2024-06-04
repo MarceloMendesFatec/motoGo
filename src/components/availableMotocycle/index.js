@@ -23,7 +23,7 @@ const AvailableMotocycle = () => {
             name: "Honda CBR600RR",
             displacement: "600cc",
             year: "2022",
-            image: "https://wallpaperaccess.com/full/317501.jpg",
+            image: "https://firebasestorage.googleapis.com/v0/b/motogo-45326.appspot.com/o/motoImagens%2FzivOYKYckZdf1EAslXieyBaUlMX2%2F108.jpg?alt=media&token=b3374d65-f818-4c02-916b-f1adf9ab3960",
             price: 150,
         },
         {
@@ -31,7 +31,7 @@ const AvailableMotocycle = () => {
             name: "Yamaha R6",
             displacement: "600cc",
             year: "2022",
-            image: "https://wallpaperaccess.com/full/317501.jpg",
+            image: "https://firebasestorage.googleapis.com/v0/b/motogo-45326.appspot.com/o/motoImagens%2FzivOYKYckZdf1EAslXieyBaUlMX2%2F108.jpg?alt=media&token=b3374d65-f818-4c02-916b-f1adf9ab3960",
             price: 150,
         },
         {
@@ -39,7 +39,7 @@ const AvailableMotocycle = () => {
             name: "Kawasaki Ninja ZX-6R",
             displacement: "636cc",
             year: "2022",
-            image: "https://wallpaperaccess.com/full/317501.jpg",
+            image: "https://firebasestorage.googleapis.com/v0/b/motogo-45326.appspot.com/o/motoImagens%2FzivOYKYckZdf1EAslXieyBaUlMX2%2F108.jpg?alt=media&token=b3374d65-f818-4c02-916b-f1adf9ab3960",
             price: 150,
         },
         {
@@ -47,7 +47,7 @@ const AvailableMotocycle = () => {
             name: "Suzuki GSX-R600",
             displacement: "600cc",
             year: "2022",
-            image: "https://wallpaperaccess.com/full/317501.jpg",
+            image: "https://firebasestorage.googleapis.com/v0/b/motogo-45326.appspot.com/o/motoImagens%2FzivOYKYckZdf1EAslXieyBaUlMX2%2F108.jpg?alt=media&token=b3374d65-f818-4c02-916b-f1adf9ab3960",
             price: 150,
         },
         {
