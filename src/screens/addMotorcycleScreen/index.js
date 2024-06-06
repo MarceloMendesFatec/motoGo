@@ -81,6 +81,11 @@ const AddMotorcycleScreen = ({ navigation }) => {
         });
     }, [auth]);
 
+    useEffect(() => {
+        setFormDataToSend({ ...formData, ...images });
+      }, [formData, images]);
+      
+      
     if (loading) {
         return (
             <NativeBaseProvider>

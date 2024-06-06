@@ -23,7 +23,7 @@ const AvailableMotocycle = () => {
             name: "Honda CBR600RR",
             displacement: "600cc",
             year: "2022",
-            image: "https://firebasestorage.googleapis.com/v0/b/motogo-45326.appspot.com/o/motoImagens%2FzivOYKYckZdf1EAslXieyBaUlMX2%2F108.jpg?alt=media&token=b3374d65-f818-4c02-916b-f1adf9ab3960",
+            image: "https://media.motonline.com.br/noticia/wp-content/uploads/2016/07/2006HondaCBR600RR-001.jpg",
             price: 150,
         },
         {
@@ -31,7 +31,7 @@ const AvailableMotocycle = () => {
             name: "Yamaha R6",
             displacement: "600cc",
             year: "2022",
-            image: "https://firebasestorage.googleapis.com/v0/b/motogo-45326.appspot.com/o/motoImagens%2FzivOYKYckZdf1EAslXieyBaUlMX2%2F108.jpg?alt=media&token=b3374d65-f818-4c02-916b-f1adf9ab3960",
+            image: "https://i.pinimg.com/736x/e5/b8/a0/e5b8a01b533c00db9d4e4885111cf176.jpg",
             price: 150,
         },
         {
@@ -39,7 +39,7 @@ const AvailableMotocycle = () => {
             name: "Kawasaki Ninja ZX-6R",
             displacement: "636cc",
             year: "2022",
-            image: "https://firebasestorage.googleapis.com/v0/b/motogo-45326.appspot.com/o/motoImagens%2FzivOYKYckZdf1EAslXieyBaUlMX2%2F108.jpg?alt=media&token=b3374d65-f818-4c02-916b-f1adf9ab3960",
+            image: "https://cloudfront-us-east-1.images.arcpublishing.com/octane/Z4UIHWRP6FASFKM4USBK7LXSTY.jpg",
             price: 150,
         },
         {
@@ -47,7 +47,7 @@ const AvailableMotocycle = () => {
             name: "Suzuki GSX-R600",
             displacement: "600cc",
             year: "2022",
-            image: "https://firebasestorage.googleapis.com/v0/b/motogo-45326.appspot.com/o/motoImagens%2FzivOYKYckZdf1EAslXieyBaUlMX2%2F108.jpg?alt=media&token=b3374d65-f818-4c02-916b-f1adf9ab3960",
+            image: "https://cdn.motor1.com/images/mgl/xw4Lq/s1/sweet-gixxer-bro-suzuki-gsx-r600-review.jpg",
             price: 150,
         },
         {
@@ -87,7 +87,7 @@ const AvailableMotocycle = () => {
             <Image
                 source={{ uri: item.image }}
                 alt="Motorcycle"
-                style={{ height: 150, width: "170", resizeMode: 'contain' , borderRadius: 16}}
+                style={{ height: 150, width: 170, resizeMode: 'contain' , borderRadius: 16}}
             />
             <View style={{ marginTop: 3 }}>
                 <Text style={{ fontSize: 16, fontWeight: '700' }}>{item.name}</Text>
