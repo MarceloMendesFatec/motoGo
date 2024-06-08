@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
     NativeBaseProvider,
     Text,
@@ -14,59 +14,81 @@ import {
 } from "native-base";
 import { AntDesign } from '@expo/vector-icons';
 import { TouchableOpacity, View } from "react-native";
+import db from "../../service/firebaseConfig";
+import { collection, getDocs } from "firebase/firestore";
 
 const AvailableMotocycle = () => {
     // Mock data for the list of motorcycles
-    const data = [
-        {
-            id: 1,
-            name: "Honda CBR600RR",
-            displacement: "600cc",
-            year: "2022",
-            image: "https://media.motonline.com.br/noticia/wp-content/uploads/2016/07/2006HondaCBR600RR-001.jpg",
-            price: 150,
-        },
-        {
-            id: 2,
-            name: "Yamaha R6",
-            displacement: "600cc",
-            year: "2022",
-            image: "https://i.pinimg.com/736x/e5/b8/a0/e5b8a01b533c00db9d4e4885111cf176.jpg",
-            price: 150,
-        },
-        {
-            id: 3,
-            name: "Kawasaki Ninja ZX-6R",
-            displacement: "636cc",
-            year: "2022",
-            image: "https://cloudfront-us-east-1.images.arcpublishing.com/octane/Z4UIHWRP6FASFKM4USBK7LXSTY.jpg",
-            price: 150,
-        },
-        {
-            id: 4,
-            name: "Suzuki GSX-R600",
-            displacement: "600cc",
-            year: "2022",
-            image: "https://cdn.motor1.com/images/mgl/xw4Lq/s1/sweet-gixxer-bro-suzuki-gsx-r600-review.jpg",
-            price: 150,
-        },
-        {
-            id: 5,
-            name: "Ducati Panigale V2",
-            displacement: "955cc",
-            year: "2022",
-            image: "https://wallpaperaccess.com/full/317501.jpg",
-            price: 150,
-        },
-        {
-            id: 6,
-            name: "Triumph Daytona 675",
-            displacement: "675cc",
-            year: "2022",
-            image: "https://wallpaperaccess.com/full/317501.jpg",
-            price: 150,
-        },
-    ];
+    // const data = [
+    //     {
+    //         id: 1,
+    //         name: "Honda CBR600RR",
+    //         displacement: "600cc",
+    //         year: "2022",
+    //         image: "https://media.motonline.com.br/noticia/wp-content/uploads/2016/07/2006HondaCBR600RR-001.jpg",
+    //         price: 150,
+    //     },
+    //     {
+    //         id: 2,
+    //         name: "Yamaha R6",
+    //         displacement: "600cc",
+    //         year: "2022",
+    //         image: "https://i.pinimg.com/736x/e5/b8/a0/e5b8a01b533c00db9d4e4885111cf176.jpg",
+    //         price: 150,
+    //     },
+    //     {
+    //         id: 3,
+    //         name: "Kawasaki Ninja ZX-6R",
+    //         displacement: "636cc",
+    //         year: "2022",
+    //         image: "https://cloudfront-us-east-1.images.arcpublishing.com/octane/Z4UIHWRP6FASFKM4USBK7LXSTY.jpg",
+    //         price: 150,
+    //     },
+    //     {
+    //         id: 4,
+    //         name: "Suzuki GSX-R600",
+    //         displacement: "600cc",
+    //         year: "2022",
+    //         image: "https://cdn.motor1.com/images/mgl/xw4Lq/s1/sweet-gixxer-bro-suzuki-gsx-r600-review.jpg",
+    //         price: 150,
+    //     },
+    //     {
+    //         id: 5,
+    //         name: "Ducati Panigale V2",
+    //         displacement: "955cc",
+    //         year: "2022",
+    //         image: "https://wallpaperaccess.com/full/317501.jpg",
+    //         price: 150,
+    //     },
+    //     {
+    //         id: 6,
+    //         name: "Triumph Daytona 675",
+    //         displacement: "675cc",
+    //         year: "2022",
+    //         image: "https://wallpaperaccess.com/full/317501.jpg",
+    //         price: 150,
+    //     },
+    // ];
+
+    const [motorcycles, setMotorcycles] = useState([]);
+
+    useEffect(() => {
+      const fetchMotorcycles = async () => {
+        const querySnapshot = await getDocs(collection(db, "motos-disponiveis"));
+        const motorcyclesData = [];
+        querySnapshot.forEach((doc) => {
+          motorcyclesData.push(doc.data());
+        });
+        setMotorcycles(motorcyclesData);
+        console.log("Motorcycles data:", motorcyclesData);
+      };
+
+      fetchMotorcycles();
+    }, []);
+  
+
+   
+
 
     // Render item component for each motorcycle
     const renderItem = ({ item }) => (
@@ -104,14 +126,14 @@ const AvailableMotocycle = () => {
 
     return (
         <NativeBaseProvider>
-            <FlatList
-                data={data}
+            {/* <FlatList
+                data={motorcycles}
                 numColumns={2}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id.toString()}
                 contentContainerStyle={{ paddingBottom: 20 }}
                 mt={-200}// Adjust content padding if necessary
-            />
+            /> */}
         </NativeBaseProvider>
     );
 };

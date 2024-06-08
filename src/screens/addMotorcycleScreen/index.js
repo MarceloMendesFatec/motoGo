@@ -56,6 +56,7 @@ const AddMotorcycleScreen = ({ navigation }) => {
     const auth = getAuth();
     const storage = getStorage();
 
+    // monitora o teclado para exibir ou ocultar o botão de adicionar moto
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
             setKeyboardVisible(true); 
@@ -70,6 +71,7 @@ const AddMotorcycleScreen = ({ navigation }) => {
         };
     }, []);
 
+    // verifica se o usuário está autenticado e atualiza o objeto formData com o uid do usuário
     useEffect(() => {
         onAuthStateChanged(auth, async (authenticatedUser) => {
             if (authenticatedUser) {
@@ -81,11 +83,12 @@ const AddMotorcycleScreen = ({ navigation }) => {
         });
     }, [auth]);
 
+    // atualiza o objeto formDataToSend toda vez que o objeto formData ou images é atualizado
     useEffect(() => {
         setFormDataToSend({ ...formData, ...images });
       }, [formData, images]);
       
-      
+
     if (loading) {
         return (
             <NativeBaseProvider>
@@ -96,6 +99,7 @@ const AddMotorcycleScreen = ({ navigation }) => {
         );
     }
 
+    // função para validar os campos do formulário e enviar o anúncio para o Firestore
     const validar = () => {
         const newErrors = {};
         if (images.length === 0) {
@@ -138,6 +142,7 @@ const AddMotorcycleScreen = ({ navigation }) => {
         }
     };
 
+    // função para enviar o anúncio para o Firestore
     const enviarAnuncio = async () => {
         try {
             await addDoc(collection(db, "motos-disponiveis"), formDataToSend);
@@ -165,10 +170,12 @@ const AddMotorcycleScreen = ({ navigation }) => {
         }
     };
 
+    // função para navegar para a tela Home
     const homeScreen = () => {
         navigation.navigate("Home");
     };
 
+    // função para selecionar uma imagem da galeria
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -184,6 +191,7 @@ const AddMotorcycleScreen = ({ navigation }) => {
         }
     };
 
+    // função para enviar a imagem para o Firebase Storage
     const uploadImage = async (uri) => {
         if (!formData.uid) {
             console.error("Usuário não autenticado");
