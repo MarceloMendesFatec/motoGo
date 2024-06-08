@@ -90,7 +90,7 @@ const AvailableMotocycle = () => {
    
 
 
-    // Render item component for each motorcycle
+    // Renderiza cada item da lista de motocicletas
     const renderItem = ({ item }) => (
         <Pressable 
         style={{
@@ -107,17 +107,17 @@ const AvailableMotocycle = () => {
         >
           <Box>
             <Image
-                source={{ uri: item.image }}
+                source={{ uri: item[0] }}
                 alt="Motorcycle"
                 style={{ height: 150, width: 170, resizeMode: 'contain' , borderRadius: 16}}
             />
             <View style={{ marginTop: 3 }}>
-                <Text style={{ fontSize: 16, fontWeight: '700' }}>{item.name}</Text>
+                <Text style={{ fontSize: 16, fontWeight: '700' }}>{item.modelo}</Text>
                 <Badge colorScheme="darkblue" variant="solid" rounded={5} mt={5}>
-                <Text style={{ fontSize: 16 }} color={"white"}>{item.displacement}</Text>
+                <Text style={{ fontSize: 16 }} color={"white"}>{item.cilindradas} CC</Text>
                 </Badge>
                 <Badge colorScheme="info" variant="outline" rounded={5} mt={1} >
-                <Text color="primary.700" style={{ fontSize: 16 }} textAlign={"center"} mt={1}>R$:{item.price}/DIA</Text>
+                <Text color="primary.700" style={{ fontSize: 16 }} textAlign={"center"} mt={1}>R$:{item.preco}/DIA</Text>
                 </Badge>
             </View>
             </Box>
@@ -126,14 +126,14 @@ const AvailableMotocycle = () => {
 
     return (
         <NativeBaseProvider>
-            {/* <FlatList
+            <FlatList
                 data={motorcycles}
                 numColumns={2}
                 renderItem={renderItem}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item.id}
                 contentContainerStyle={{ paddingBottom: 20 }}
                 mt={-200}// Adjust content padding if necessary
-            /> */}
+            />
         </NativeBaseProvider>
     );
 };
