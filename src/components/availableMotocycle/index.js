@@ -15,7 +15,7 @@ import {
 import { AntDesign } from '@expo/vector-icons';
 import { TouchableOpacity, View } from "react-native";
 import db from "../../service/firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs ,  onSnapshot } from "firebase/firestore";
 
 const AvailableMotocycle = () => {
     // Mock data for the list of motorcycles
@@ -72,22 +72,38 @@ const AvailableMotocycle = () => {
 
     const [motorcycles, setMotorcycles] = useState([]);
 
-    useEffect(() => {
-      const fetchMotorcycles = async () => {
-        const querySnapshot = await getDocs(collection(db, "motos-disponiveis"));
-        const motorcyclesData = [];
-        querySnapshot.forEach((doc) => {
-          motorcyclesData.push(doc.data());
-        });
-        setMotorcycles(motorcyclesData);
-        console.log("Motorcycles data:", motorcyclesData);
-      };
+    // useEffect(() => {
+    //   const fetchMotorcycles = async () => {
+    //     const querySnapshot = await getDocs(collection(db, "motos-disponiveis"));
+    //     const motorcyclesData = [];
+    //     querySnapshot.forEach((doc) => {
+    //       motorcyclesData.push(doc.data());
+    //     });
+    //     setMotorcycles(motorcyclesData);
+    //     console.log("Motorcycles data:", motorcyclesData);
+    //   };
 
-      fetchMotorcycles();
-    }, []);
+    //   fetchMotorcycles();
+    // }, []);
   
 
-   
+    useEffect(() => {
+      // Referência à coleção 'motos-disponiveis' do Firestore
+      const motosRef = collection(db, "motos-disponiveis");
+
+      // Configuração do listener em tempo real
+      const unsubscribe = onSnapshot(motosRef, (querySnapshot) => {
+        const motorcyclesData = [];
+        querySnapshot.forEach((doc) => {
+          motorcyclesData.push({ id: doc.id, ...doc.data() }); // Inclui o ID do documento para usar como chave única
+        });
+        setMotorcycles(motorcyclesData);
+        console.log("Motorcycles data updated:", motorcyclesData);
+      });
+
+      // Função de limpeza para desinscrever o listener
+      return () => unsubscribe();
+    }, []); // Array de dependências vazio para executar apenas uma vez ao montar o componente
 
 
     // Renderiza cada item da lista de motocicletas
