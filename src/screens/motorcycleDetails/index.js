@@ -36,6 +36,27 @@ const MotorcycleDetails = ({ route }) => {
     const textColor = colorMapping[motorcycle.cor] || 'darkgray';
 
     const [calendarVisible, setCalendarVisible] = useState(false);
+    const [selectedDates, setSelectedDates] = useState({});
+    const [checkoutModalVisible, setCheckoutModalVisible] = useState(false);
+    const [datesSelected, setDatesSelected] = useState(false);
+
+
+
+    const handleDayPress = (date) => {
+        const newDates = { ...selectedDates };
+        const dateString = date.dateString;
+        if (!newDates[dateString]) {
+            newDates[dateString] = { selected: true };
+            setDatesSelected(true); // Defina como true quando uma data é selecionada
+        } else {
+            delete newDates[dateString];
+            setDatesSelected(Object.keys(newDates).length > 0); // Defina como false se não houver mais datas selecionadas
+        }
+        setSelectedDates(newDates);
+    };
+
+
+
 
     return (
         <NativeBaseProvider>
@@ -133,11 +154,55 @@ const MotorcycleDetails = ({ route }) => {
                         <Modal.CloseButton />
                         <Modal.Header>Selecione as datas</Modal.Header>
                         <Modal.Body>
-                            <Calendar />
+                            <Calendar
+                                onDayPress={handleDayPress}
+                                markedDates={selectedDates}
+                            />
+
+                        </Modal.Body>
+                    </Modal.Content>
+                    <Modal.Footer>
+                        {datesSelected && (
+                            <Button
+                                onPress={() => {
+                                    setCalendarVisible(false); // Fechar o modal do calendário
+                                    setCheckoutModalVisible(true); // Abrir o modal de checkout
+                                }}
+                            >
+                                Confirmar
+                            </Button>
+                        )}
+                    </Modal.Footer>
+
+                </Modal>
+            )}
+
+            {checkoutModalVisible && (
+                <Modal isOpen={checkoutModalVisible} onClose={() => setCheckoutModalVisible(false)}>
+                    <Modal.Content>
+                        <Modal.CloseButton />
+                        <Modal.Header>Resumo da reserva</Modal.Header>
+                        <Modal.Body>
+                            <Text>Confirme as datas da reserva:</Text>
+                            <Text>{JSON.stringify(selectedDates)}</Text>
+                            <Button
+                                colorScheme="primary"
+                                borderRadius={20}
+                                px={10}
+                                py={3}
+                                _text={{ fontWeight: 700, fontSize: 18 }}
+                                onPress={() => setCheckoutModalVisible(false)}
+                            >
+                                Confirmar reserva
+                            </Button>
                         </Modal.Body>
                     </Modal.Content>
                 </Modal>
+
             )}
+
+
+
 
         </NativeBaseProvider>
     );
