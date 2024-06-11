@@ -1,26 +1,37 @@
-import React from "react";
-import { NativeBaseProvider, Text, Box, Image, VStack, HStack, Badge } from "native-base";
+import React, { useEffect } from "react";
+import { NativeBaseProvider, Box, Image, HStack, ScrollView } from "native-base";
 
 const MotorcycleDetails = ({ route }) => {
     const { motorcycle } = route.params; // Obtém o objeto motorcycle passado via navegação
 
+    useEffect(() => {
+        console.log("Motorcycle details:", motorcycle);
+    }, [motorcycle]);
+
+    // Filtra as chaves numéricas que representam URLs de imagens
+    const imageKeys = Object.keys(motorcycle).filter(key => !isNaN(key));
+
     return (
         <NativeBaseProvider>
-            <Box flex={1} alignItems="center" justifyContent="center" p={5}>
-                <Image 
-                    source={{ uri: motorcycle.imagem }}
-                    alt="Motorcycle"
-                    style={{ height: 300, width: 300, resizeMode: 'contain', borderRadius: 16 }}
-                />
-                <VStack space={2} mt={5}>
-                    <Text fontSize="xl" fontWeight="bold">{motorcycle.modelo}</Text>
-                    <Text fontSize="md">Ano: {motorcycle.ano}</Text>
-                    <Text fontSize="md">Cilindradas: {motorcycle.cilindradas} CC</Text>
-                    <Badge colorScheme="info" variant="outline" rounded={5}>
-                        <Text color="primary.700" fontSize="lg">R$:{motorcycle.preco}/DIA</Text>
-                    </Badge>
-                </VStack>
-            </Box>
+            
+               {/* // Exibe as imagens da moto em um ScrollView horizontal */}
+                <HStack space={2} alignItems="center" justifyContent="center" m={5}>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                        {imageKeys.map((key, index) => (
+                            <Image
+                                key={index}
+                                source={{ uri: motorcycle[key] }}
+                                alt={`Image ${index}`}
+                                size="2xl"
+                                resizeMode="cover"
+                                borderRadius={8}
+                                marginRight={2}
+                            />
+                        ))}
+                    </ScrollView>
+                </HStack>
+            
+            
         </NativeBaseProvider>
     );
 };
