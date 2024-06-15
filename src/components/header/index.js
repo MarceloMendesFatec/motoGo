@@ -49,7 +49,7 @@ const Header = () => {
                         <Text bold fontSize={"xl"}>Itu, SP</Text>
                     </VStack>
                     <Avatar
-                        mx={24}
+                        mx={10}
                         mt={5}
                         size={"lg"}
                         source={{ uri: user?.avatar || 'https://via.placeholder.com/150' }}

@@ -39,22 +39,51 @@ const MotorcycleDetails = ({ route }) => {
     const [selectedDates, setSelectedDates] = useState({});
     const [checkoutModalVisible, setCheckoutModalVisible] = useState(false);
     const [datesSelected, setDatesSelected] = useState(false);
+    const [rangeStart, setRangeStart] = useState(null); // Data de início do intervalo
 
 
 
     const handleDayPress = (date) => {
-        const newDates = { ...selectedDates };
-        const dateString = date.dateString;
-        if (!newDates[dateString]) {
-            newDates[dateString] = { selected: true };
-            setDatesSelected(true); // Defina como true quando uma data é selecionada
-        } else {
-            delete newDates[dateString];
-            setDatesSelected(Object.keys(newDates).length > 0); // Defina como false se não houver mais datas selecionadas
+        const today = new Date().toISOString().split('T')[0];
+        const selectedDate = date.dateString;
+    
+        // Verifique se a data selecionada não é menor que a data atual
+        if (selectedDate < today) {
+          return;
         }
+    
+        const newDates = { ...selectedDates };
+    
+        // Se não houver uma data inicial de intervalo, define-a
+        if (!rangeStart) {
+          newDates[selectedDate] = { selected: true };
+          setRangeStart(selectedDate);
+          setDatesSelected(true);
+        } else {
+          // Se já houver uma data inicial de intervalo, define a data final e preenche o intervalo
+          const start = new Date(rangeStart);
+          const end = new Date(selectedDate);
+    
+          if (start <= end) {
+            // Preenche todas as datas entre o início e o fim
+            let currentDate = start;
+            while (currentDate <= end) {
+              const formattedDate = currentDate.toISOString().split('T')[0];
+              newDates[formattedDate] = { selected: true };
+              currentDate.setDate(currentDate.getDate() + 1);
+            }
+            setRangeStart(null); // Reseta o início do intervalo
+          } else {
+            // Se o usuário clicar em uma data antes da data de início, reseta e começa novo intervalo
+            newDates[selectedDate] = { selected: true };
+            setRangeStart(selectedDate);
+          }
+    
+          setDatesSelected(true); // Defina como true quando um intervalo é selecionado
+        }
+    
         setSelectedDates(newDates);
-    };
-
+      };
 
 
 
@@ -78,7 +107,7 @@ const MotorcycleDetails = ({ route }) => {
                 </ScrollView>
             </HStack>
 
-            <Box borderWidth={3} borderColor="gray.200" borderRadius={16} p={3} bg="white" m={5} shadow={5}>
+            <Box borderWidth={3} borderColor="gray.100" borderRadius={16} p={1} bg="white" m={5} shadow={5} flex={1}>
 
                 {/* Detalhes da Motocicleta */}
                 <Text fontSize="2xl" fontWeight="bold" color="primary.500" mb={4} textAlign="center">
@@ -130,7 +159,7 @@ const MotorcycleDetails = ({ route }) => {
 
 
                 {/* Botão de Ação */}
-                <Center mb={5} mt={10}>
+                <Center mb={5} mt={5}>
                     <Button
                         colorScheme="primary"
                         borderRadius={20}
@@ -161,13 +190,15 @@ const MotorcycleDetails = ({ route }) => {
 
                         </Modal.Body>
                     </Modal.Content>
-                    <Modal.Footer>
+                    <Modal.Footer mt={5} borderWidth={1} p={1} borderColor={"gray.500"}>
                         {datesSelected && (
                             <Button
+                                size={"lg"}
                                 onPress={() => {
                                     setCalendarVisible(false); // Fechar o modal do calendário
                                     setCheckoutModalVisible(true); // Abrir o modal de checkout
                                 }}
+                                
                             >
                                 Confirmar
                             </Button>
