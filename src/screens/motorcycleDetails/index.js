@@ -40,50 +40,86 @@ const MotorcycleDetails = ({ route }) => {
     const [checkoutModalVisible, setCheckoutModalVisible] = useState(false);
     const [datesSelected, setDatesSelected] = useState(false);
     const [rangeStart, setRangeStart] = useState(null); // Data de início do intervalo
+    const [rangeEnd, setRangeEnd] = useState(null); // Data de fim do intervalo
 
 
 
     const handleDayPress = (date) => {
         const today = new Date().toISOString().split('T')[0];
         const selectedDate = date.dateString;
-    
+
         // Verifique se a data selecionada não é menor que a data atual
         if (selectedDate < today) {
-          return;
+            return;
         }
-    
+
         const newDates = { ...selectedDates };
-    
+
         // Se não houver uma data inicial de intervalo, define-a
         if (!rangeStart) {
-          newDates[selectedDate] = { selected: true };
-          setRangeStart(selectedDate);
-          setDatesSelected(true);
-        } else {
-          // Se já houver uma data inicial de intervalo, define a data final e preenche o intervalo
-          const start = new Date(rangeStart);
-          const end = new Date(selectedDate);
-    
-          if (start <= end) {
-            // Preenche todas as datas entre o início e o fim
-            let currentDate = start;
-            while (currentDate <= end) {
-              const formattedDate = currentDate.toISOString().split('T')[0];
-              newDates[formattedDate] = { selected: true };
-              currentDate.setDate(currentDate.getDate() + 1);
-            }
-            setRangeStart(null); // Reseta o início do intervalo
-          } else {
-            // Se o usuário clicar em uma data antes da data de início, reseta e começa novo intervalo
             newDates[selectedDate] = { selected: true };
             setRangeStart(selectedDate);
-          }
-    
-          setDatesSelected(true); // Defina como true quando um intervalo é selecionado
+            setRangeEnd(null);
+            setDatesSelected(true);
+        } else {
+            // Se já houver uma data inicial de intervalo, define a data final e preenche o intervalo
+            const start = new Date(rangeStart);
+            const end = new Date(selectedDate);
+
+            if (start <= end) {
+                // Verifica se o usuário clicou novamente na data final para desmarcar o intervalo
+                if (selectedDate === rangeEnd) {
+                    setSelectedDates({});
+                    setRangeStart(null);
+                    setRangeEnd(null);
+                    setDatesSelected(false);
+                } else {
+                    // Preenche todas as datas entre o início e o fim
+                    let currentDate = start;
+                    while (currentDate <= end) {
+                        const formattedDate = currentDate.toISOString().split('T')[0];
+                        newDates[formattedDate] = { selected: true };
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    setRangeEnd(selectedDate);
+                }
+            } else {
+                // Se o usuário clicar em uma data antes da data de início, reseta e começa novo intervalo
+                newDates[selectedDate] = { selected: true };
+                setRangeStart(selectedDate);
+                setRangeEnd(null);
+            }
+
+            setDatesSelected(true); // Define como true quando um intervalo é selecionado
         }
-    
+
         setSelectedDates(newDates);
-      };
+    };
+
+    // Função para calcular a diferença de dias entre duas datas
+    const calculateDaysBetween = (start, end) => {
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        return Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1; // Inclui o dia final na contagem
+    };
+
+   // Função para formatar datas no formato "DD/MM/YYYY"
+  const formatDate = (date) => {
+    const [year, month, day] = date.split('-');
+    return `${day}/${month}/${year}`;
+  };
+
+  // Formatar as datas para exibição no modal de checkout
+  const formatSelectedDates = () => {
+    if (!rangeStart || !rangeEnd) return '';
+
+    const totalDays = calculateDaysBetween(rangeStart, rangeEnd);
+    const startDateFormatted = formatDate(rangeStart);
+    const endDateFormatted = formatDate(rangeEnd);
+
+    return `Data de início: ${startDateFormatted}\nData de fim: ${endDateFormatted}\nTotal de dias: ${totalDays}`;
+  };
+
 
 
 
@@ -198,7 +234,7 @@ const MotorcycleDetails = ({ route }) => {
                                     setCalendarVisible(false); // Fechar o modal do calendário
                                     setCheckoutModalVisible(true); // Abrir o modal de checkout
                                 }}
-                                
+
                             >
                                 Confirmar
                             </Button>
@@ -215,7 +251,7 @@ const MotorcycleDetails = ({ route }) => {
                         <Modal.Header>Resumo da reserva</Modal.Header>
                         <Modal.Body>
                             <Text>Confirme as datas da reserva:</Text>
-                            <Text>{JSON.stringify(selectedDates)}</Text>
+                            <Text>{formatSelectedDates()}</Text>
                             <Button
                                 colorScheme="primary"
                                 borderRadius={20}
@@ -229,7 +265,6 @@ const MotorcycleDetails = ({ route }) => {
                         </Modal.Body>
                     </Modal.Content>
                 </Modal>
-
             )}
 
 
