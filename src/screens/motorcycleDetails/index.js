@@ -3,7 +3,7 @@ import { NativeBaseProvider, Box, Image, VStack, HStack, ScrollView, Text, Divid
 import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import { Calendar } from 'react-native-calendars';
 
-const MotorcycleDetails = ({ route }) => {
+const MotorcycleDetails = ({ route ,navigation }) => {
   const { motorcycle } = route.params; // Obtém o objeto motorcycle passado via navegação
 
   useEffect(() => {
@@ -140,6 +140,7 @@ const MotorcycleDetails = ({ route }) => {
     return totalDays * pricePerDay;
   };
 
+
   // Função para processar o pagamento
   const processPayment = () => {
     setProcessingPayment(true);
@@ -150,6 +151,12 @@ const MotorcycleDetails = ({ route }) => {
       setSuccessModalVisible(true);
     }, 4000);
   };
+
+  const handleCloseModal = () => {
+    setSuccessModalVisible(false);
+    navigation.navigate('Inicio'); // Navegação para a tela "Inicio"
+};
+
 
   return (
     <NativeBaseProvider>
@@ -308,7 +315,7 @@ const MotorcycleDetails = ({ route }) => {
             <Modal.Footer>
               <Button
                 colorScheme="green"
-                onPress={() => setSuccessModalVisible(false)}
+                onPress={handleCloseModal}
               >
                 Fechar
               </Button>
