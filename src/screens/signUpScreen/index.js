@@ -168,7 +168,7 @@ const SignUpScreen = ({ navigation }) => {
                                 <FormControl isRequired _text={{ bold: true }}>
                                     <FormControl.Label>CEP</FormControl.Label>
                                     <Input
-                                        placeholder="Confirme sua senha"
+                                        placeholder="Digite seu cep"
                                         keyboardType='numeric'
                                         value={formData.cep}
                                         maxLength={9} // Define o comprimento máximo para o CEP
